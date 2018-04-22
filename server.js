@@ -1,14 +1,22 @@
 var express = require('express');
 var app = express();
 var multer  = require('multer')
-var upload = multer({ dest: __dirname + '/uploads/' })
+var memoryStorage = multer.memoryStorage();
+var memoryUpload = multer({
+	storage: memoryStorage,
+	limits: {
+		filesize: 20*1024*1024,
+		files: 1
+	}
+}).single("file");
+//var upload = multer({ dest: __dirname + '/uploads/' })
 
 const GCP_API_KEY = process.env.GCP_API_KEY;
 
 app.use(express.static('public'));
 
 app.use((req, res, next) => {
-  console.log(req);
+  console.log(req.file);
   console.log('Hello');
   next();
 });
@@ -17,10 +25,8 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-app.post('/', upload.single('cover'), (req, res) => {
-  
-  
-  
+app.post('/', memoryUpload, (req, res) => {
+  res.send(req.file.originalname);
 });
 
 
