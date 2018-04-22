@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
-var multer  = require('multer')
+var multer  = require('multer');
+app.use(require('body-parser').urlencoded({ extended: true }));
 var memoryStorage = multer.memoryStorage();
 var memoryUpload = multer({
 	storage: memoryStorage,
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', memoryUpload, (req, res) => {
+  console.log(req.body.t);
   res.send(req.file.originalname);
 });
 
