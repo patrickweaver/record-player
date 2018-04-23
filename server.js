@@ -12,7 +12,7 @@ const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const spotifyApiUrl = '	https://api.spotify.com/v1/';
 
 function postGcpVision(imagePath, req, res) {
-  var options = {
+  let gcpVisionOptions = {
     method: 'POST',
     uri: gcpApiUrl + 'key=' + GCP_API_KEY,
     body: {
@@ -35,13 +35,28 @@ function postGcpVision(imagePath, req, res) {
     json: true // Automatically stringifies the body to JSON
   };
  
-  rp(options)
+  rp(gcpVisionOptions)
   .then(function (parsedBody) {
     console.log(parsedBody);
-    return parsedBody;
+    return parsedBody.responses[0].webDetection.bestGuessLabels[0].label;
   })
   .then(function (pb) {
-    res.send(pb);
+    let spotifyOptions = {
+      method: 'GET',
+      uri: spotifyApiUrl + 'search?q=' + pb + '&type=Album',
+      json: true
+    }
+    
+    
+    
+    rp(spotifyOptions)
+    .then(function(spotifyData) {
+      res.send(spotifyData);
+    })
+    .catch(function(err) {
+      throw(err);
+    });
+    
   })
   .catch(function (err) {
     console.log(err);
