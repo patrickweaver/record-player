@@ -4,13 +4,17 @@ var multer  = require('multer');
 var upload = multer({ dest: __dirname + '/public/images/' })
 var rp = require('request-promise-native');
 
+const gcpApiUrl = 'https://vision.googleapis.com/v1/images:annotate?'
 const GCP_API_KEY = process.env.GCP_API_KEY;
-const projectUrl = "https://" + process.env.PROJECT_DOMAIN + ".glitch.me"
+
+const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
+
+const spotifyApiUrl = '	https://api.spotify.com/v1/';
 
 function postGcpVision(imagePath, req, res) {
   var options = {
     method: 'POST',
-    uri: 'https://vision.googleapis.com/v1/images:annotate?key=' + GCP_API_KEY,
+    uri: gcpApiUrl + 'key=' + GCP_API_KEY,
     body: {
       "requests":[
         {
@@ -34,13 +38,15 @@ function postGcpVision(imagePath, req, res) {
   rp(options)
   .then(function (parsedBody) {
     console.log(parsedBody);
-    res.send(parsedBody);
+    return parsedBody;
+  })
+  .then(function (pb) {
+    res.send(pb);
   })
   .catch(function (err) {
     console.log(err);
     res.send(err);
   });
-  
 }
 
 
