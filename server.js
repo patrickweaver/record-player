@@ -56,7 +56,8 @@ function postGcpVision(imagePath, req, res) {
     
     rp(spotifyOptions)
     .then(function(spotifyData) {
-      res.send(spotifyData.albums.items[0].external_urls.spotify);
+      let url = spotifyData.albums.items[0].external_urls.spotify;
+      res.send("<a href='" + url + "' target='_blank'>" + url + "</a>");
     })
     .catch(function(err) {
       console.log("SpotifyError");
