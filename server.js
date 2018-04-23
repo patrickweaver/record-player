@@ -5,8 +5,9 @@ var upload = multer({ dest: __dirname + '/public/images/' })
 var rp = require('request-promise-native');
 
 const GCP_API_KEY = process.env.GCP_API_KEY;
+const projectUrl = "https://" + process.env.PROJECT_DOMAIN + ".glitch.me/"
 
-function postGcpVision(imagePath) {
+function postGcpVision(imagePath, req, res) {
   var options = {
     method: 'POST',
     uri: 'https://vision.googleapis.com/v1/images:annotate?key=' + GCP_API_KEY,
@@ -14,11 +15,13 @@ function postGcpVision(imagePath) {
       "requests":[
         {
           "image":{
-            "content":"imagePath"
+            "source": {
+              "imageUri": projectUrl + imagePath
+            }
           },
           "features":[
             {
-              "type":"LABEL_DETECTION",
+              "type":"WEB_DETECTION",
               "maxResults":1
             }
           ]
@@ -30,10 +33,12 @@ function postGcpVision(imagePath) {
  
   rp(options)
   .then(function (parsedBody) {
-      // POST succeeded...
+    console.log(parsedBody);
+    res.send(parsedBody);
   })
   .catch(function (err) {
-      // POST failed...
+    console.log(err);
+    res.send(err);
   });
   
 }
@@ -56,7 +61,13 @@ app.get('/', (req, res) => {
 
 app.post('/', upload.single('file'), function(req, res) {
   //res.send(req.file);
-  res.send("<img src='/images/" + req.file.filename + "'>");
+  let iamgePath = "/images/" + req.file.feilname
+  //res.send("<img src='/images/" + req.file.filename + "'>");
+  postGcpVision(
+});
+
+app.get('/env', (req, res) => {
+  res.send(process.env.PROJECT_DOMAIN);
 });
 
 
