@@ -18,7 +18,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', upload.single('file'), function(req, res) {
-  res.send("<img src='" + req.file.path + "'>");
+  //res.send(req.file);
+  res.send("<img src='/" + req.file.filename + "'>");
 });
 
 
