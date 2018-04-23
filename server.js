@@ -5,7 +5,7 @@ var upload = multer({ dest: __dirname + '/public/images/' })
 var rp = require('request-promise-native');
 
 const GCP_API_KEY = process.env.GCP_API_KEY;
-const projectUrl = "https://" + process.env.PROJECT_DOMAIN + ".glitch.me/"
+const projectUrl = "https://" + process.env.PROJECT_DOMAIN + ".glitch.me"
 
 function postGcpVision(imagePath, req, res) {
   var options = {
@@ -49,11 +49,13 @@ function postGcpVision(imagePath, req, res) {
 
 app.use(express.static('public'));
 
+/*
 app.use((req, res, next) => {
   console.log(req.file);
   console.log('Hello');
   next();
 });
+*/
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
@@ -61,9 +63,9 @@ app.get('/', (req, res) => {
 
 app.post('/', upload.single('file'), function(req, res) {
   //res.send(req.file);
-  let iamgePath = "/images/" + req.file.feilname
-  //res.send("<img src='/images/" + req.file.filename + "'>");
-  postGcpVision(
+  let imagePath = "/images/" + req.file.filename;
+  //res.send("<img src=" + imagePath + "'>");
+  postGcpVision(imagePath, req, res);
 });
 
 app.get('/env', (req, res) => {
