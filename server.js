@@ -37,28 +37,35 @@ function postGcpVision(imagePath, req, res) {
  
   rp(gcpVisionOptions)
   .then(function (parsedBody) {
-    console.log(parsedBody);
-    return parsedBody.responses[0].webDetection.bestGuessLabels[0].label;
+    console.log(JSON.stringify(parsedBody));
+    let label = parsedBody.responses[0].webDetection.bestGuessLabels[0].label;
+    console.log(label);
+    return label;
   })
   .then(function (pb) {
     let spotifyOptions = {
       method: 'GET',
       uri: spotifyApiUrl + 'search?q=' + pb + '&type=Album',
-      json: true
+      json: true,
+      auth: {
+          'bearer': process.env.token
+      }
     }
     
     
     
     rp(spotifyOptions)
     .then(function(spotifyData) {
-      res.send(spotifyData);
+      res.send(spotifyData.albums.items[0].external_urls.spotify);
     })
     .catch(function(err) {
+      console.log("SpotifyError");
       throw(err);
     });
     
   })
   .catch(function (err) {
+    console.log("GCP Error");
     console.log(err);
     res.send(err);
   });
