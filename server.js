@@ -10,6 +10,7 @@ const GCP_API_KEY = process.env.GCP_API_KEY;
 
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const redirectPath = '/b';
+const stateString = 'abc123';
 
 const spotifyApiUrl = '	https://api.spotify.com/v1/';
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
@@ -105,12 +106,18 @@ app.post('/', upload.single('file'), function(req, res) {
 app.get('/a', (req, res) => {
   let query = {
     client_id: SPOTIFY_CLIENT_ID,
-    response: "token",
-    redirect_uri
+    response_type: "token",
+    redirect_uri: projectUrl + redirectPath,
+    state: stateString,
+    show_dialog: false
   }
   
   
-  //res.redirect("https://accounts.spotify.com/authorize?client_id=" + SPOTIFY_CLIENT_ID + "&response_type=token&
+  res.redirect("https://accounts.spotify.com/authorize?" + querystring.stringify(query));
+});
+
+app.get('/b', (req, res) => {
+  res.send("authenticated!"); 
 });
 
 
