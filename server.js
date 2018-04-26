@@ -47,6 +47,7 @@ function postGcpVision(imagePath, req, res) {
     console.log(label);
     return label;
   })
+  
   .then(function (pb) {
     let spotifyOptions = {
       method: 'GET',
@@ -55,9 +56,7 @@ function postGcpVision(imagePath, req, res) {
       auth: {
           'bearer': process.env.token
       }
-    }
-    
-    
+    } 
     
     rp(spotifyOptions)
     .then(function(spotifyData) {
@@ -83,14 +82,6 @@ function postGcpVision(imagePath, req, res) {
 
 
 app.use(express.static('public'));
-
-/*
-app.use((req, res, next) => {
-  console.log(req.file);
-  console.log('Hello');
-  next();
-});
-*/
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
