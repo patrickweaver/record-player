@@ -4,7 +4,7 @@ var multer  = require('multer');
 var upload = multer({ dest: __dirname + '/public/images/' })
 var rp = require('request-promise-native');
 const querystring = require('querystring');
-require('url')
+const url = require('url')
 
 const gcpApiUrl = 'https://vision.googleapis.com/v1/images:annotate?'
 const GCP_API_KEY = process.env.GCP_API_KEY;
@@ -109,9 +109,9 @@ app.get('/a', (req, res) => {
 });
 
 app.get('/b', (req, res) => {
-  var a = url.parse(req.url);
-  console.log(req);
-  res.send(req.body.access_token); 
+  var a = req.originalUrl;
+  console.log(a);
+  res.send("ok"); 
 });
 
 
