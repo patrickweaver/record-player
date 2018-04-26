@@ -4,6 +4,7 @@ var multer  = require('multer');
 var upload = multer({ dest: __dirname + '/public/images/' })
 var rp = require('request-promise-native');
 const querystring = require('querystring');
+require('url')
 
 const gcpApiUrl = 'https://vision.googleapis.com/v1/images:annotate?'
 const GCP_API_KEY = process.env.GCP_API_KEY;
@@ -17,6 +18,8 @@ const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 
 function postGcpVision(imagePath, req, res) {
+  
+  var guess = "";
   let gcpVisionOptions = {
     method: 'POST',
     uri: gcpApiUrl + 'key=' + GCP_API_KEY,
@@ -43,15 +46,13 @@ function postGcpVision(imagePath, req, res) {
   rp(gcpVisionOptions)
   .then(function (parsedBody) {
     console.log(JSON.stringify(parsedBody));
-    let label = parsedBody.responses[0].webDetection.bestGuessLabels[0].label;
-    console.log(label);
-    return label;
+    guess = parsedBody.responses[0].webDetection.bestGuessLabels[0].label;
+    console.log(guess);
   })
-  
-  .then(function (pb) {
+  .then(function () {
     let spotifyOptions = {
       method: 'GET',
-      uri: spotifyApiUrl + 'search?q=' + pb + '&type=Album',
+      uri: spotifyApiUrl + 'search?q=' + guess + '&type=Album',
       json: true,
       auth: {
           'bearer': process.env.token
@@ -108,7 +109,9 @@ app.get('/a', (req, res) => {
 });
 
 app.get('/b', (req, res) => {
-  res.send("authenticated!"); 
+  var a = url.parse(req.url);
+  console.log(req);
+  res.send(req.body.access_token); 
 });
 
 
