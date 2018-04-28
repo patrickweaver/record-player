@@ -11,12 +11,14 @@ const url = require('url')
 const googleVision = require('./googleVision');
 
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
-const redirectPath = '/b';
+
 const stateString = 'abc123';
 
-const spotifyApiUrl = '	https://api.spotify.com/v1/';
+const spotify = require('./spotify');
+const spotifyApiUrl = 'https://api.spotify.com/v1/';
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+const redirectPath = '/b';
 const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
 var spotifyToken = '';
 
@@ -55,16 +57,10 @@ function postGcpVision(imagePath, req, res) {
     
   })
   .then(function (safeGuess) {
-    let spotifyOptions = {
-      method: 'GET',
-      uri: spotifyApiUrl + 'search?q=' + safeGuess + '&type=Album',
-      json: true,
-      auth: {
-          'bearer': spotifyToken
-      }
-    } 
     
-    rp(spotifyOptions)
+    let spotifyQueryOptions = spotify.spotifyQueryOptions(spotifyToken, safeGuess);
+    
+    rp(spotifyQueryOptions)
     .then(function(spotifyData) {
       console.log("spotifyData: ");
       console.log(JSON.stringify(spotifyData));
