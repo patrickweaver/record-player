@@ -111,7 +111,11 @@ app.get('/a', (req, res) => {
 app.get('/b', (req, res) => {
   var a = req.originalUrl;
   console.log(a);
-  res.send("ok"); 
+  res.send('<script>window.location="/c"</script>'); 
+});
+
+app.get('/c', (req, res) => {
+  
 });
 
 
