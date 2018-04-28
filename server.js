@@ -62,11 +62,12 @@ function postGcpVision(imagePath, req, res) {
       console.log("SpotifyError");
       throw(err);
     });
+    console.log("url: " + url);
     return url;
   })
   .then(function(url) {
     res.redirect(url);
-  });
+  })
   .catch(function (err) {
     console.log("GCP Error");
     console.log(err);
