@@ -98,12 +98,11 @@ app.post('/', upload.single('file'), function(req, res) {
 app.get('/a', (req, res) => {
   let query = {
     client_id: SPOTIFY_CLIENT_ID,
-    response_type: "token",
+    response_type: "code",
     redirect_uri: projectUrl + redirectPath,
     state: stateString,
     show_dialog: false
   }
-  
   
   res.redirect("https://accounts.spotify.com/authorize?" + querystring.stringify(query));
 });
@@ -111,11 +110,12 @@ app.get('/a', (req, res) => {
 app.get('/b', (req, res) => {
   var a = req.originalUrl;
   console.log(a);
-  res.send('<script>window.location="/c"</script>'); 
+  res.send(req.query.state);
+  //res.send('<script>window.location="/c?hash=" + window.location.hash.substring(1, window.location.hash.length)</script>'); 
 });
 
 app.get('/c', (req, res) => {
-  
+  res.send(req.query.hash);
 });
 
 
