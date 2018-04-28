@@ -26,4 +26,6 @@ function getGcpOptions(imageUrl) {
   }
 }
 
-module.exports = getGcpOptions;
+module.exports = {
+  getGcpOptions: getGcpOptions
+}

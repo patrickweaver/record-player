@@ -12,8 +12,6 @@ const googleVision = require('./googleVision');
 
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 
-const stateString = 'abc123';
-
 const spotify = require('./spotify');
 const spotifyApiUrl = 'https://api.spotify.com/v1/';
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
@@ -27,7 +25,7 @@ const censoredWords = require('./censoredWords');
 function postGcpVision(imagePath, req, res) {
   
   var guess = "";
-  let gcpVisionOptions = googleVision(projectUrl + imagePath);
+  let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
  
   rp(gcpVisionOptions)
   .then(function (parsedBody) {
@@ -40,7 +38,7 @@ function postGcpVision(imagePath, req, res) {
     console.log(guessArray);
     for (var i in guessArray) {
       let safe = true;
-      if (censoredWords.indexOf(guessArray[i]) > -1) {
+      if (censoredWords.censoredWords.indexOf(guessArray[i]) > -1) {
         safe = false; 
       }
       if (safe) {
@@ -58,12 +56,15 @@ function postGcpVision(imagePath, req, res) {
   })
   .then(function (safeGuess) {
     
-    let spotifyQueryOptions = spotify.spotifyQueryOptions(spotifyToken, safeGuess);
+    let spotifyQueryOptions = spotify.queryOptions(spotifyToken, safeGuess);
     
     rp(spotifyQueryOptions)
     .then(function(spotifyData) {
       console.log("spotifyData: ");
       console.log(JSON.stringify(spotifyData));
+      if (spotifyData.albums.items.length === 0) {
+        throw("No items: " + JSON.stringify(spotifyData)); 
+      }
       let url = spotifyData.albums.items[0].external_urls.spotify;
       //res.send("<a href='" + url + "' target='_blank'>" + url + "</a>");
       res.redirect(url);
@@ -82,9 +83,6 @@ function postGcpVision(imagePath, req, res) {
 }
 
 
-
-
-
 app.use(express.static('public'));
 
 
@@ -98,43 +96,24 @@ app.get('/player', (req, res) => {
 });
 
 app.post('/player', upload.single('file'), function(req, res) {
-  //res.send(req.file);
   let imagePath = "/images/" + req.file.filename;
-  //res.send("<img src=" + imagePath + "'>");
   postGcpVision(imagePath, req, res);
 });
 
 app.get('/auth', (req, res) => {
-  let query = {
-    client_id: SPOTIFY_CLIENT_ID,
-    response_type: "code",
-    redirect_uri: SPOTIFY_REDIRECT_URI,
-    state: stateString,
-    show_dialog: false
-  }
-  
+  let query = spotify.authQueryStringObject;
   res.redirect("https://accounts.spotify.com/authorize?" + querystring.stringify(query));
 });
 
 app.get('/b', (req, res) => {
-  if (req.query.state === stateString && !req.query.error) {
+  if (req.query.state === spotify.stateString && !req.query.error) {
     var code = req.query.code;
     
-    var spotifyAuthOptions = {
-      method: 'POST',
-      uri: 'https://accounts.spotify.com/api/token',
-      form: {
-        grant_type: 'authorization_code',
-        code: code,
-        redirect_uri: SPOTIFY_REDIRECT_URI,
-        client_id: SPOTIFY_CLIENT_ID,
-        client_secret: SPOTIFY_CLIENT_SECRET,
-      },
-      json: true
-    }
+    const spotifyAuthOptions = spotify.authOptions(code);
     
     rp(spotifyAuthOptions)
     .then(data => {
+      
       console.log("access_token: " + data.access_token);
       console.log("token_type: " + data.token_type);
       console.log("scope: " + data.scope);
