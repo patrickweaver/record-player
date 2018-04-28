@@ -5,23 +5,14 @@ var upload = multer({ dest: __dirname + '/public/images/' })
 var rp = require('request-promise-native');
 const querystring = require('querystring');
 const url = require('url')
-
-const googleVision = require('./googleVision');
-
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 
+const googleVision = require('./googleVision');
 const spotify = require('./spotify');
-//const spotifyApiUrl = 'https://api.spotify.com/v1/';
-//const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
-//const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
-//const redirectPath = '/auth-callback';
-//const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
 var spotifyToken = '';
-
 const censoredWords = require('./censoredWords');
 
 function postGcpVision(imagePath, req, res) {
-  
   var guess = "";
   let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
  
@@ -52,11 +43,11 @@ function postGcpVision(imagePath, req, res) {
     return safeArray.join(" ");
     
   })
-  .then(function (safeGuess) {
+  .then(async function (safeGuess) {
     
     let spotifyQueryOptions = spotify.queryOptions(spotifyToken, safeGuess);
     
-    rp(spotifyQueryOptions)
+    let url = await rp(spotifyQueryOptions)
     .then(function(spotifyData) {
       console.log("spotifyData: ");
       console.log(JSON.stringify(spotifyData));
@@ -65,14 +56,17 @@ function postGcpVision(imagePath, req, res) {
       }
       let url = spotifyData.albums.items[0].external_urls.spotify;
       //res.send("<a href='" + url + "' target='_blank'>" + url + "</a>");
-      res.redirect(url);
+      return url;
     })
     .catch(function(err) {
       console.log("SpotifyError");
       throw(err);
     });
-    
+    return url;
   })
+  .then(function(url) {
+    res.redirect(url);
+  });
   .catch(function (err) {
     console.log("GCP Error");
     console.log(err);
@@ -80,6 +74,8 @@ function postGcpVision(imagePath, req, res) {
   });
 }
 
+
+/* Routes */
 
 app.use(express.static('public'));
 
