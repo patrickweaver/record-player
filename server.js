@@ -6,8 +6,8 @@ var rp = require('request-promise-native');
 const querystring = require('querystring');
 const url = require('url')
 
-const gcpApiUrl = 'https://vision.googleapis.com/v1/images:annotate?'
-const GCP_API_KEY = process.env.GCP_API_KEY;
+//const gcpApiUrl = 'https://vision.googleapis.com/v1/images:annotate?'
+//const GCP_API_KEY = process.env.GCP_API_KEY;
 const googleVision = require('./googleVision');
 
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
@@ -20,35 +20,11 @@ const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
 var spotifyToken = '';
 
-const censoredWords = ["album", "cover"];
+const censoredWords = require('./censoredWords');
 
 function postGcpVision(imagePath, req, res) {
   
   var guess = "";
-  /*
-  let gcpVisionOptions = {
-    method: 'POST',
-    uri: gcpApiUrl + 'key=' + GCP_API_KEY,
-    body: {
-      "requests":[
-        {
-          "image":{
-            "source": {
-              "imageUri": projectUrl + imagePath
-            }
-          },
-          "features":[
-            {
-              "type":"WEB_DETECTION",
-              "maxResults":1
-            }
-          ]
-        }
-      ]
-    },
-    json: true // Automatically stringifies the body to JSON
-  };
-  */
   let gcpVisionOptions = googleVision(projectUrl + imagePath);
  
   rp(gcpVisionOptions)
@@ -62,16 +38,13 @@ function postGcpVision(imagePath, req, res) {
     console.log(guessArray);
     for (var i in guessArray) {
       let safe = true;
-      for (var j in censoredWords) {
-        console.log(censoredWords[j]);
-        console.log(guessArray.indexOf(censoredWords[j]));
-        if (guessArray.indexOf(censoredWords[j]) > -1) {
-          safe = false; 
-        }
+      if (censoredWords.indexOf(guessArray[i]) > -1) {
+        safe = false; 
       }
       if (safe) {
         safeArray.push(guessArray[i]); 
       } else {
+        // Need to add these to a DB
         console.log("NOT SAFE");
         console.log(guessArray[i]);
       }
