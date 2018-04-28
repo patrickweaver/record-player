@@ -12,11 +12,11 @@ const spotify = require('./spotify');
 var spotifyToken = '';
 const censoredWords = require('./censoredWords');
 
-function postGcpVision(imagePath, req, res) {
+async function apiChain(imagePath, req, res) {
   var guess = "";
   let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
- 
-  rp(gcpVisionOptions)
+  
+  let url = await rp(gcpVisionOptions)
   .then(function (parsedBody) {
     console.log(JSON.stringify(parsedBody));
     guess = parsedBody.responses[0].webDetection.bestGuessLabels[0].label;
@@ -55,7 +55,6 @@ function postGcpVision(imagePath, req, res) {
         throw("No items: " + JSON.stringify(spotifyData)); 
       }
       let url = spotifyData.albums.items[0].external_urls.spotify;
-      //res.send("<a href='" + url + "' target='_blank'>" + url + "</a>");
       return url;
     })
     .catch(function(err) {
@@ -66,13 +65,16 @@ function postGcpVision(imagePath, req, res) {
     return url;
   })
   .then(function(url) {
-    res.redirect(url);
+    return {error: false, url: url};
   })
   .catch(function (err) {
     console.log("GCP Error");
     console.log(err);
     res.send(err);
+    return {error: true, errorMessage: err};
   });
+  
+  return url;
 }
 
 
@@ -90,9 +92,15 @@ app.get('/player', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-app.post('/player', upload.single('file'), function(req, res) {
+app.post('/player', upload.single('file'), async function(req, res) {
   let imagePath = "/images/" + req.file.filename;
-  postGcpVision(imagePath, req, res);
+  let apiResponse = await apiChain(imagePath, req, res);
+  // {error: bool, url: url, errorMessage: errorMessage}
+  if (!apiResponse.error) {
+    res.redirect(apiResponse.url);
+  } else {
+    res.send("Error: " + apiResponse.errorMessage);
+  } 
 });
 
 app.get('/auth', (req, res) => {
