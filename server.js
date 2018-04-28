@@ -6,76 +6,9 @@ var rp = require('request-promise-native');
 const querystring = require('querystring');
 const url = require('url')
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
+const apiChain = require('./apiChain');
 
-const googleVision = require('./googleVision');
 const spotify = require('./spotify');
-var spotifyToken = '';
-const censoredWords = require('./censoredWords');
-
-async function apiChain(imagePath, req, res) {
-  var guess = "";
-  let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
-  
-  let url = await rp(gcpVisionOptions)
-  .then(function (parsedBody) {
-    console.log(JSON.stringify(parsedBody));
-    guess = parsedBody.responses[0].webDetection.bestGuessLabels[0].label;
-    console.log("guess: " + guess);
-    let guessArray = guess.split(" ");
-    let safeArray = []
-    console.log("guessArray: ");
-    console.log(guessArray);
-    for (var i in guessArray) {
-      let safe = true;
-      if (censoredWords.censoredWords.indexOf(guessArray[i]) > -1) {
-        safe = false; 
-      }
-      if (safe) {
-        safeArray.push(guessArray[i]); 
-      } else {
-        // Need to add these to a DB
-        console.log("NOT SAFE");
-        console.log(guessArray[i]);
-      }
-    }
-    console.log("safeArray: ");
-    console.log(safeArray);  
-    return safeArray.join(" ");
-    
-  })
-  .then(async function (safeGuess) {
-    
-    let spotifyQueryOptions = spotify.queryOptions(spotifyToken, safeGuess);
-    
-    let url = await rp(spotifyQueryOptions)
-    .then(function(spotifyData) {
-      console.log("spotifyData: ");
-      console.log(JSON.stringify(spotifyData));
-      if (spotifyData.albums.items.length === 0) {
-        throw("No items: " + JSON.stringify(spotifyData)); 
-      }
-      let url = spotifyData.albums.items[0].external_urls.spotify;
-      return url;
-    })
-    .catch(function(err) {
-      console.log("SpotifyError");
-      throw(err);
-    });
-    console.log("url: " + url);
-    return url;
-  })
-  .then(function(url) {
-    return {error: false, url: url};
-  })
-  .catch(function (err) {
-    console.log("GCP Error");
-    console.log(err);
-    res.send(err);
-    return {error: true, errorMessage: err};
-  });
-  
-  return url;
-}
 
 
 /* Routes */
@@ -123,7 +56,7 @@ app.get('/auth-callback', (req, res) => {
       console.log("expires_in: " + data.expires_in);
       console.log("refresh_token: " + data.refresh_token);
       */
-      spotifyToken = data.access_token
+      spotify.token = data.access_token
       res.redirect('/player');
     })
     .catch(err => {

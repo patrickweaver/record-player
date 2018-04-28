@@ -42,12 +42,15 @@ function authOptions(code) {
   } 
 }
 
+var token = '';
+
 
 module.exports = {
   queryOptions: queryOptions,
   stateString: stateString,
   authQueryStringObject: authQueryStringObject,
-  authOptions: authOptions
+  authOptions: authOptions,
+  token: token
 }
 
 
