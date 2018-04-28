@@ -1,0 +1,16 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 125%;
+  line-height: 125%;
+  font-family: sans-serif;
+}
+
+button, input, label {
+  font-size: 100%;
+  line-height: 100%;
+  display: block;
+  margin: 1.5em 0;
+}
