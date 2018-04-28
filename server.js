@@ -7,7 +7,6 @@ const querystring = require('querystring');
 const url = require('url')
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const apiChain = require('./apiChain');
-
 const spotify = require('./spotify');
 
 

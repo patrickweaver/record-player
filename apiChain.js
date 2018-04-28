@@ -59,7 +59,7 @@ function checkSpotifyData(spotifyData) {
 module.exports = async function(imagePath, req, res) {
   let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
   
-  let apiRes = await rp(gcpVisionOptions)
+  let apiChainResponse = await rp(gcpVisionOptions)
   .then(checkGoogleVisionGuess)
   .then(askSpotifyApi)
   .then((url) => {
@@ -71,5 +71,5 @@ module.exports = async function(imagePath, req, res) {
     return {error: true, errorMessage: err};
   });
   
-  return url;
+  return apiChainResponse;
 }
