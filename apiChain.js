@@ -35,14 +35,16 @@ function checkGoogleVisionGuess(gvGuess) {
 async function askSpotifyApi(safeGuess) {  
   let spotifyQueryOptions = spotify.queryOptions(spotify.token, safeGuess);
 
-  let url = await rp(spotifyQueryOptions)
+  let u = await rp(spotifyQueryOptions);
+  
+  return
   .then(checkSpotifyData)
   .catch(function(err) {
     console.log("SpotifyError");
     throw(err);
   });
   console.log("url: " + url);
-  return url;
+  //return url;
 }
 
 function checkSpotifyData(spotifyData) {
