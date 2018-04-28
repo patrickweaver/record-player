@@ -5,6 +5,8 @@ const googleVision = require('./googleVision');
 const spotify = require('./spotify');
 const censoredWords = require('./censoredWords');
 
+function askGoogleVision(
+
 
 function checkGoogleVisionGuess(gvGuess) {
   console.log(JSON.stringify(gvGuess));
@@ -34,36 +36,30 @@ function checkGoogleVisionGuess(gvGuess) {
 
 async function askSpotifyApi(safeGuess) {  
   let spotifyQueryOptions = spotify.queryOptions(spotify.token, safeGuess);
-
-  let u = await rp(spotifyQueryOptions);
-  
-  return
-  .then(checkSpotifyData)
-  .catch(function(err) {
-    console.log("SpotifyError");
-    throw(err);
-  });
-  console.log("url: " + url);
-  //return url;
+  let spotifyData = await rp(spotifyQueryOptions);
+  return spotifyData;
 }
 
 function checkSpotifyData(spotifyData) {
   console.log("spotifyData: ");
   console.log(JSON.stringify(spotifyData));
   if (spotifyData.albums.items.length === 0) {
+    console.log("SpotifyError");
     throw("No items: " + JSON.stringify(spotifyData)); 
   }
   let url = spotifyData.albums.items[0].external_urls.spotify;
+  console.log("url: " + url);
   return url;
 }
 
 
-module.exports = async function(imagePath, req, res) {
+module.exports = function(imagePath, req, res) {
   let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
   
-  let apiChainResponse = await rp(gcpVisionOptions)
+  return rp(gcpVisionOptions)
   .then(checkGoogleVisionGuess)
   .then(askSpotifyApi)
+  .then(checkSpotifyData)
   .then((url) => {
     return {error: false, url: url};
   })
@@ -72,6 +68,4 @@ module.exports = async function(imagePath, req, res) {
     console.log(err);
     return {error: true, errorMessage: err};
   });
-  
-  return apiChainResponse;
 }
