@@ -3,7 +3,7 @@ const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const spotifyApiUrl = 'https://api.spotify.com/v1/';
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
-const redirectPath = '/b';
+const redirectPath = '/auth-callback';
 const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
 
 function queryOptions(spotifyToken, safeGuess) {

@@ -6,18 +6,16 @@ var rp = require('request-promise-native');
 const querystring = require('querystring');
 const url = require('url')
 
-//const gcpApiUrl = 'https://vision.googleapis.com/v1/images:annotate?'
-//const GCP_API_KEY = process.env.GCP_API_KEY;
 const googleVision = require('./googleVision');
 
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 
 const spotify = require('./spotify');
-const spotifyApiUrl = 'https://api.spotify.com/v1/';
-const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
-const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
-const redirectPath = '/b';
-const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
+//const spotifyApiUrl = 'https://api.spotify.com/v1/';
+//const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+//const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+//const redirectPath = '/auth-callback';
+//const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
 var spotifyToken = '';
 
 const censoredWords = require('./censoredWords');
@@ -105,7 +103,7 @@ app.get('/auth', (req, res) => {
   res.redirect("https://accounts.spotify.com/authorize?" + querystring.stringify(query));
 });
 
-app.get('/b', (req, res) => {
+app.get('/auth-callback', (req, res) => {
   if (req.query.state === spotify.stateString && !req.query.error) {
     var code = req.query.code;
     
@@ -113,12 +111,13 @@ app.get('/b', (req, res) => {
     
     rp(spotifyAuthOptions)
     .then(data => {
-      
+      /*
       console.log("access_token: " + data.access_token);
       console.log("token_type: " + data.token_type);
       console.log("scope: " + data.scope);
       console.log("expires_in: " + data.expires_in);
       console.log("refresh_token: " + data.refresh_token);
+      */
       spotifyToken = data.access_token
       res.redirect('/player');
     })

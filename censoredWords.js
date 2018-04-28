@@ -1,10 +1,12 @@
 const censoredWords = [
-  "album",
-  "cover",
-  "vinyl",
-  "[vinyl]",
-  "usa",
-  "import"
+  'album',
+  'cover',
+  'vinyl',
+  '[vinyl]',
+  'usa',
+  'import',
+  '-',
+  'lp'
 ];
 
 var semiCensoredWords = [
