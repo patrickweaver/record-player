@@ -1,7 +1,7 @@
 {
-  "name": "blank-placeholder",
+  "name": "record-player",
   "version": "0.0.1",
-  "description": "Blank Placeholder",
+  "description": "A computer vision enabled record player",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -17,7 +17,7 @@
     "node": "8.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/welcome-project"
+    "url": "https://glitch.com/edit/#!/record-player"
   },
   "license": "MIT"
 }

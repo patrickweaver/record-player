@@ -17,6 +17,7 @@ const spotifyApiUrl = '	https://api.spotify.com/v1/';
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
+var spotifyToken = '';
 
 function postGcpVision(imagePath, req, res) {
   
@@ -56,7 +57,7 @@ function postGcpVision(imagePath, req, res) {
       uri: spotifyApiUrl + 'search?q=' + guess + '&type=Album',
       json: true,
       auth: {
-          'bearer': process.env.token
+          'bearer': spotifyToken
       }
     } 
     
@@ -138,15 +139,12 @@ app.get('/b', (req, res) => {
       console.log("scope: " + data.scope);
       console.log("expires_in: " + data.expires_in);
       console.log("refresh_token: " + data.refresh_token);
-      res.send("OK");
+      spotifyToken = data.access_token
+      res.redirect('/player');
     })
     .catch(err => {
       res.send(err.message);
     });
-    
-    
-    
-    //res.redirect('/player');
   } else {
    res.send("Error: " + req.query.error);     
   }
