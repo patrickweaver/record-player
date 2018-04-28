@@ -84,18 +84,24 @@ function postGcpVision(imagePath, req, res) {
 
 app.use(express.static('public'));
 
+
 app.get('/', (req, res) => {
+  res.redirect('/auth');
+});
+
+
+app.get('/player', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-app.post('/', upload.single('file'), function(req, res) {
+app.post('/player', upload.single('file'), function(req, res) {
   //res.send(req.file);
   let imagePath = "/images/" + req.file.filename;
   //res.send("<img src=" + imagePath + "'>");
   postGcpVision(imagePath, req, res);
 });
 
-app.get('/a', (req, res) => {
+app.get('/auth', (req, res) => {
   let query = {
     client_id: SPOTIFY_CLIENT_ID,
     response_type: "code",
@@ -108,16 +114,29 @@ app.get('/a', (req, res) => {
 });
 
 app.get('/b', (req, res) => {
-  var a = req.originalUrl;
-  console.log(a);
-  res.send(req.query.state);
-  //res.send('<script>window.location="/c?hash=" + window.location.hash.substring(1, window.location.hash.length)</script>'); 
+  if (req.query.state === stateString && !req.query.error) {
+    var code = req.query.code;
+    
+    var spotifyAuthOptions = {
+      method: 'POST',
+      uri: 'https://accounts.spotify.com/api/token',
+      body: {
+        code: code
+      }
+    }
+    
+    rp(spotifyAuthOptions)
+    .then(data => {
+      
+    });
+    
+    
+    res.send("OK");
+    //res.redirect('/player');
+  } else {
+   res.send("Error: " + req.query.error);     
+  }
 });
-
-app.get('/c', (req, res) => {
-  res.send(req.query.hash);
-});
-
 
 
 var listener = app.listen(process.env.PORT, function () {
