@@ -16,6 +16,7 @@ const stateString = 'abc123';
 const spotifyApiUrl = '	https://api.spotify.com/v1/';
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
 
 function postGcpVision(imagePath, req, res) {
   
@@ -105,7 +106,7 @@ app.get('/auth', (req, res) => {
   let query = {
     client_id: SPOTIFY_CLIENT_ID,
     response_type: "code",
-    redirect_uri: projectUrl + redirectPath,
+    redirect_uri: SPOTIFY_REDIRECT_URI,
     state: stateString,
     show_dialog: false
   }
@@ -121,17 +122,30 @@ app.get('/b', (req, res) => {
       method: 'POST',
       uri: 'https://accounts.spotify.com/api/token',
       body: {
-        code: code
-      }
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: SPOTIFY_REDIRECT_URI,
+        client_id: SPOTIFY_CLIENT_ID,
+        client_secret: SPOTIFY_CLIENT_SECRET,
+      },
+      json: true
     }
     
     rp(spotifyAuthOptions)
     .then(data => {
-      
+      console.log("access_token: " + req.body.access_token);
+      console.log("token_type: " + req.body.token_type);
+      console.log("scope: " + req.body.scope);
+      console.log("expires_in: " + req.body.expires_in);
+      console.log("refresh_token: " + req.body.refresh_token);
+      res.send("OK");
+    })
+    .catch(err => {
+      res.send(err.message);
     });
     
     
-    res.send("OK");
+    
     //res.redirect('/player');
   } else {
    res.send("Error: " + req.query.error);     
