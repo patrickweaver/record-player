@@ -20,6 +20,8 @@ const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
 var spotifyToken = '';
 
+const censoredWords = ["album", "cover"];
+
 function postGcpVision(imagePath, req, res) {
   
   var guess = "";
@@ -53,7 +55,19 @@ function postGcpVision(imagePath, req, res) {
   .then(function (parsedBody) {
     console.log(JSON.stringify(parsedBody));
     guess = parsedBody.responses[0].webDetection.bestGuessLabels[0].label;
-    console.log(guess);
+    console.log("guess: " + guess);
+    let guessArray = guess.split(" ");
+    console.log("guessArray: ");
+    console.log(guessArray);
+    for (var i in guessArray) {
+      for (var j in censoredWords) {
+        if (censoredWords.indexOf(guessArray(i)) > -1) {
+
+        }
+      }
+    }
+    
+    
   })
   .then(function () {
     let spotifyOptions = {
