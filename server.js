@@ -8,6 +8,7 @@ const url = require('url')
 
 const gcpApiUrl = 'https://vision.googleapis.com/v1/images:annotate?'
 const GCP_API_KEY = process.env.GCP_API_KEY;
+const googleVision = require('./googleVision');
 
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const redirectPath = '/b';
@@ -22,6 +23,7 @@ var spotifyToken = '';
 function postGcpVision(imagePath, req, res) {
   
   var guess = "";
+  /*
   let gcpVisionOptions = {
     method: 'POST',
     uri: gcpApiUrl + 'key=' + GCP_API_KEY,
@@ -44,6 +46,8 @@ function postGcpVision(imagePath, req, res) {
     },
     json: true // Automatically stringifies the body to JSON
   };
+  */
+  let gcpVisionOptions = googleVision(projectUrl + imagePath);
  
   rp(gcpVisionOptions)
   .then(function (parsedBody) {
