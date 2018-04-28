@@ -5,7 +5,19 @@ const googleVision = require('./googleVision');
 const spotify = require('./spotify');
 const censoredWords = require('./censoredWords');
 
-function askGoogleVision(
+function askGoogleVision(imagePath) {
+  return new Promise(async function(resolve, reject) {
+    let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
+    let gvGuess = await rp(gcpVisionOptions);
+    console.log(JSON.stringify(gvGuess));
+    console.log(typeof gvGuess);
+    if (typeof gvGuess === "string") {
+      resolve(gvGuess);
+    } else {
+      reject(Error(gvGuess));
+    }
+  });
+}
 
 
 function checkGoogleVisionGuess(gvGuess) {
@@ -54,9 +66,10 @@ function checkSpotifyData(spotifyData) {
 
 
 module.exports = function(imagePath, req, res) {
-  let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
+  //let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
   
-  return rp(gcpVisionOptions)
+  //return rp(gcpVisionOptions)
+  return askGoogleVision(imagePath)
   .then(checkGoogleVisionGuess)
   .then(askSpotifyApi)
   .then(checkSpotifyData)
