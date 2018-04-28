@@ -57,22 +57,34 @@ function postGcpVision(imagePath, req, res) {
     guess = parsedBody.responses[0].webDetection.bestGuessLabels[0].label;
     console.log("guess: " + guess);
     let guessArray = guess.split(" ");
+    let safeArray = []
     console.log("guessArray: ");
     console.log(guessArray);
     for (var i in guessArray) {
+      let safe = true;
       for (var j in censoredWords) {
-        if (censoredWords.indexOf(guessArray(i)) > -1) {
-
+        console.log(censoredWords[j]);
+        console.log(guessArray.indexOf(censoredWords[j]));
+        if (guessArray.indexOf(censoredWords[j]) > -1) {
+          safe = false; 
         }
       }
+      if (safe) {
+        safeArray.push(guessArray[i]); 
+      } else {
+        console.log("NOT SAFE");
+        console.log(guessArray[i]);
+      }
     }
-    
+    console.log("safeArray: ");
+    console.log(safeArray);  
+    return safeArray.join(" ");
     
   })
-  .then(function () {
+  .then(function (safeGuess) {
     let spotifyOptions = {
       method: 'GET',
-      uri: spotifyApiUrl + 'search?q=' + guess + '&type=Album',
+      uri: spotifyApiUrl + 'search?q=' + safeGuess + '&type=Album',
       json: true,
       auth: {
           'bearer': spotifyToken
@@ -81,6 +93,8 @@ function postGcpVision(imagePath, req, res) {
     
     rp(spotifyOptions)
     .then(function(spotifyData) {
+      console.log("spotifyData: ");
+      console.log(JSON.stringify(spotifyData));
       let url = spotifyData.albums.items[0].external_urls.spotify;
       //res.send("<a href='" + url + "' target='_blank'>" + url + "</a>");
       res.redirect(url);
