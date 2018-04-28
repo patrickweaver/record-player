@@ -121,7 +121,7 @@ app.get('/b', (req, res) => {
     var spotifyAuthOptions = {
       method: 'POST',
       uri: 'https://accounts.spotify.com/api/token',
-      body: {
+      form: {
         grant_type: 'authorization_code',
         code: code,
         redirect_uri: SPOTIFY_REDIRECT_URI,
@@ -133,11 +133,11 @@ app.get('/b', (req, res) => {
     
     rp(spotifyAuthOptions)
     .then(data => {
-      console.log("access_token: " + req.body.access_token);
-      console.log("token_type: " + req.body.token_type);
-      console.log("scope: " + req.body.scope);
-      console.log("expires_in: " + req.body.expires_in);
-      console.log("refresh_token: " + req.body.refresh_token);
+      console.log("access_token: " + data.access_token);
+      console.log("token_type: " + data.token_type);
+      console.log("scope: " + data.scope);
+      console.log("expires_in: " + data.expires_in);
+      console.log("refresh_token: " + data.refresh_token);
       res.send("OK");
     })
     .catch(err => {
