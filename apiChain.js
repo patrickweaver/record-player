@@ -9,16 +9,13 @@ function askGoogleVision(imagePath) {
   return new Promise(async function(resolve, reject) {
     let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
     let gvGuess = await rp(gcpVisionOptions);
-    console.log(JSON.stringify(gvGuess));
-    console.log(typeof gvGuess);
-    if (typeof gvGuess === "string") {
+    if (gvGuess) {
       resolve(gvGuess);
     } else {
-      reject(Error(gvGuess));
+      reject(Error("No response from Google Vision"));
     }
   });
 }
-
 
 function checkGoogleVisionGuess(gvGuess) {
   console.log(JSON.stringify(gvGuess));
@@ -66,9 +63,6 @@ function checkSpotifyData(spotifyData) {
 
 
 module.exports = function(imagePath, req, res) {
-  //let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
-  
-  //return rp(gcpVisionOptions)
   return askGoogleVision(imagePath)
   .then(checkGoogleVisionGuess)
   .then(askSpotifyApi)

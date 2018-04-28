@@ -4,7 +4,8 @@ var multer  = require('multer');
 var upload = multer({ dest: __dirname + '/public/images/' })
 var rp = require('request-promise-native');
 const querystring = require('querystring');
-const url = require('url')
+const url = require('url');
+const fs = require('fs');
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const apiChain = require('./apiChain');
 const spotify = require('./spotify');
@@ -25,14 +26,19 @@ app.get('/player', (req, res) => {
 });
 
 app.post('/player', upload.single('file'), async function(req, res) {
-  let imagePath = "/images/" + req.file.filename;
+  let imagePath = '/images/' + req.file.filename;
   let apiResponse = await apiChain(imagePath, req, res);
   // {error: bool, url: url, errorMessage: errorMessage}
   if (!apiResponse.error) {
     res.redirect(apiResponse.url);
   } else {
     res.send("Error: " + apiResponse.errorMessage);
-  } 
+  }
+  try {
+    fs.unlinkSync('/app/public' + imagePath);
+  } catch (err) {
+    console.log('error deleting ' + imagePath);
+  }
 });
 
 app.get('/auth', (req, res) => {
