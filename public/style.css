@@ -8,6 +8,9 @@ body {
   font-family: sans-serif;
   width: 100%;
   padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 button, input, label {
@@ -15,6 +18,10 @@ button, input, label {
   line-height: 100%;
   display: block;
   margin: 1.5em 0;
+}
+
+#cover-form {
+
 }
 
 #spotify-auth-button {
@@ -25,38 +32,32 @@ button, input, label {
   border-radius: 7px;
 }
 
-#spinner-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 80%;
-  padding: 20px;
-  margin: 2em 10%;
-  background-color: #EEE;
-  border: 2px solid #CCC;
-}
-
-#spinner {
-  position: relative;
-  width: 100%;
-  height: 100%;
+#spinner{
+  display: none;
 }
 
 #spinner > .logo {
-  width: 30%;
-  max-width: 192px;
+  width: 150px;
+  position: absolute;
+  left: Calc(50% - 75px);
+  top: 200px;
+  display: block;
 }
 
 #spotify-logo {
-  position: absolute;
-  left: 315px;
-  top: 143px;
-  animation: myOrbit 4s linear infinite;
+  animation: spotifyOrbit 4s linear infinite;
 }
 
 #google-cloud-logo {
-  position: absolute;
-  left: 315px;
-  top: 143px;
-  animation: myOrbit 4s linear infinite;
+  animation: googleCloudOrbit 4s linear infinite;
+}
+
+@keyframes spotifyOrbit {
+    from { transform: rotate(0deg) translateX(-150px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(-150px) rotate(-360deg); }
+}
+
+@keyframes googleCloudOrbit {
+    from { transform: rotate(-360deg) translateX(150px) rotate(360deg); }
+    to   { transform: rotate(0deg) translateX(150px) rotate(0deg); }
 }
