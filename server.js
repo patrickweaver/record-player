@@ -21,7 +21,10 @@ const spotify = require('./spotify');
 
 /* Routes */
 
+app.use(express.static('public'));
+
 app.get('/auth', (req, res) => {
+  console.log('auth');
   let query = spotify.authQueryStringObject;
   //res.redirect("https://accounts.spotify.com/authorize?" + querystring.stringify(query));
   res.render('auth', {
@@ -47,7 +50,7 @@ app.get('/auth-callback', (req, res) => {
       spotify.token = data.access_token
       
       res.cookie('spotifyAuth', data.access_token);
-      res.redirect('/camera');
+      res.redirect('/');
     })
     .catch(err => {
       res.send(err.message);
@@ -58,18 +61,14 @@ app.get('/auth-callback', (req, res) => {
 });
 
 
-
 app.use(function(req, res, next) {
   if (req.cookies.spotifyAuth) {
     next();
   } else {
-    console.log('redirect -> /auth');
     res.redirect('/auth');
   }
 });
 
-
-app.use(express.static('public'));
 
 app.get('/', (req, res) => {
   res.render('camera', {});
@@ -96,9 +95,6 @@ app.post('/player', upload.single('file'), async function(req, res) {
 app.get('/player', function(req,res) {
   res.redirect('/camera');
 });
-
-
-
 
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
