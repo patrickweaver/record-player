@@ -51,31 +51,35 @@ function askSpotifyApi(spotifyToken, safeGuessArray) {
   console.log(spotifyToken);
   console.log("");
   // Change to iterative (recursive in function below);
-  let albumId = spotifyApiRequest(spotifyToken, safeGuessArray);
+  //let albumId = spotifyApiRequest(spotifyToken, safeGuessArray);
+  let albumId = false;
+  let splitSafeGuessArray = splitGuessAtHyphen(safeGuessArray);
+  for (var i = splitSafeGuessArray.length; i > 0; i--) {
+    albumId = spotifyApiRequest(spotifyToken, splitSafeGuessArray.slice(0, i))
+    if (albumId) {
+      break;
+    }
+  }
+  
+  if (!albumId) {
+    console.log('SpotifyError');
+    throw('No items: ' + splitSafeGuessArray + '(' + safeGuessArray + ')');
+  }
+  
   return albumId;
 }
 
-async function spotifyApiRequest(spotifyToken, safeGuessArray) {
-  if (safeGuessArray.length > 0) {
-    let splitSafeGuessArray = splitGuessAtHyphen(safeGuessArray);
+async function spotifyApiRequest(spotifyToken, splitSafeGuessArray) {
+  let safeGuess = splitSafeGuessArray.join(" ");
+  let spotifyQueryOptions = spotify.queryOptions(spotifyToken, safeGuess);
+  let spotifyData = await rp(spotifyQueryOptions);
+  console.log('\nSpotify Data:');
+  console.log(JSON.stringify(spotifyData));
+  if (spotifyData.albums.items.length === 0) {
+    return false;
   } else {
-    throw('No items: ' + safeGuessArray);
-  }
-  if (splitSafeGuessArray.length > 0) {
-    let safeGuess = splitSafeGuessArray.join(" ");
-    let spotifyQueryOptions = spotify.queryOptions(spotifyToken, safeGuess);
-    let spotifyData = await rp(spotifyQueryOptions);
-    console.log('\nSpotify Data:');
-    console.log(JSON.stringify(spotifyData));
-    if (spotifyData.albums.items.length === 0) {
-      return spotifyApiRequest(splitSafeGuessArray.splice(-1, 1));
-    } else {
-      let albumId = spotifyData.albums.items[0].id;
-      return albumId;
-    }
-  } else {
-    console.log('SpotifyError');
-    throw('No items: ' + splitSafeGuessArray + '(' + safeGuessArray + ')');
+    let albumId = spotifyData.albums.items[0].id;
+    return albumId;
   }
 }
 

@@ -101,7 +101,7 @@ app.get('/player', function(req,res) {
 });
 
 function handleError(res, err) {
-  console.log("/nError");
+  console.log("\nError");
   console.log(JSON.stringify(err));
   res.redirect(err);
 }
