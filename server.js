@@ -20,6 +20,14 @@ const spotify = require('./spotify');
 
 
 /* Routes */
+if (0) {
+  app.use((req,res) => {
+    res.clearCookie('spotifyAccessToken');
+    res.clearCookie('spotifyRefreshToken');
+    res.send("<h1>Clear</h1>");
+  });
+}
+
 
 app.use(express.static('public'));
 
@@ -52,7 +60,8 @@ app.get('/auth-callback', (req, res) => {
       let spotifyAccessOptions = {
         // Spotify sends token in seconds, express wants milliseconds
         // remove 5 seconds to avoid race conditions.
-        maxAge: (data.expires_in - 5) * 1000
+        //maxAge: (data.expires_in - 5) * 1000
+        maxAge: 25000
       }
       res.cookie('spotifyAccessToken', data.access_token, spotifyAccessOptions);
       res.cookie('spotifyRefreshToken', data.refresh_token);
@@ -69,7 +78,17 @@ app.get('/auth-callback', (req, res) => {
 
 function refreshSpotifyToken(refreshToken) {
   
+  let options = {
+    uri: 'https://accounts.spotify.com/api/token',
+    form: {
+      grant_type:	'refresh_token',
+      refresh_token: refreshToken
+    },
+    json: true
+  }
   
+  let tokenApiResponse = rp(options);
+  return tokenApiResponse;
 }
 
 
@@ -79,7 +98,7 @@ app.use(function(req, res, next) {
   } else {
     if (req.cookies.spotifyRefreshToken) {
       let accessToken = refreshSpotifyToken(req.cookies.spotifyRefreshToken);
-      console.log(accessToken);
+      console.log(JSON.stringify(accessToken));
       res.send("access");
     } else {
       res.redirect('/auth');
