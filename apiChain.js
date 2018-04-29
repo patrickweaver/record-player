@@ -38,7 +38,7 @@ function checkGoogleVisionGuess(gvGuess) {
       console.log(guessArray[i]);
     }
   }
-  console.log("safeArray: ");
+  console.log('safeArray: ');
   console.log(safeArray);  
   return safeArray;   
 }
@@ -58,6 +58,8 @@ async function spotifyApiRequest(safeGuessArray) {
     let safeGuess = splitSafeGuessArray.join(" ");
     let spotifyQueryOptions = spotify.queryOptions(spotify.token, safeGuess);
     let spotifyData = await rp(spotifyQueryOptions);
+    console.log('/nSpotify Data:');
+    console.log(JSON.stringify(spotifyData));
     if (spotifyData.albums.items.length === 0) {
       return spotifyApiRequest(splitSafeGuessArray.splice(-1, 1));
     } else {

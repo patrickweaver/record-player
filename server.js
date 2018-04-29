@@ -10,6 +10,9 @@ const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const apiChain = require('./apiChain');
 const spotify = require('./spotify');
 
+const hbs = require("hbs");
+app.set("view engine", "hbs");
+app.set("views", "views");
 
 /* Routes */
 
