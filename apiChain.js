@@ -43,19 +43,36 @@ function checkGoogleVisionGuess(gvGuess) {
   return safeArray.join(" ");   
 }
 
-async function askSpotifyApi(safeGuess) {  
-  let spotifyQueryOptions = spotify.queryOptions(spotify.token, safeGuess);
-  let spotifyData = await rp(spotifyQueryOptions);
+async function askSpotifyApi(safeGuess) {
+  function spotifyApiRequest(safeGuess) {
+    if (safeGuess.length > 0) {
+      let spotifyQueryOptions = spotify.queryOptions(spotify.token, safeGuess);
+      let spotifyData = await rp(spotifyQueryOptions);
+    } else {
+      throw("No items: " + JSON.stringify(spotifyData));
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  if (spotifyData.albums.items.length === 0) {
+    console.log("SpotifyError");
+    throw("No items: " + JSON.stringify(spotifyData)); 
+  }
+  
+  
   return spotifyData;
 }
 
 function checkSpotifyData(spotifyData) {
   console.log("spotifyData: ");
   console.log(JSON.stringify(spotifyData));
-  if (spotifyData.albums.items.length === 0) {
-    console.log("SpotifyError");
-    throw("No items: " + JSON.stringify(spotifyData)); 
-  }
+  
   let url = spotifyData.albums.items[0].external_urls.spotify;
   console.log("url: " + url);
   return url;

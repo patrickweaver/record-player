@@ -37,7 +37,7 @@ app.post('/player', upload.single('file'), async function(req, res) {
   try {
     fs.unlinkSync('/app/public' + imagePath);
   } catch (err) {
-    console.log('error deleting ' + imagePath);
+    console.log('error deleting ' + imagePath + ': ' + err);
   }
 });
 
