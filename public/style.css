@@ -39,6 +39,10 @@ button, input, label {
   display: inline;
 }
 
+.box.is-dragover {
+  background-color: grey;
+}
+
 #spotify-auth-button {
   background-color: #1db954;
   color: white;
