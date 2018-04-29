@@ -52,7 +52,8 @@ module.exports = {
   stateString: stateString,
   authQueryStringObject: authQueryStringObject,
   authOptions: authOptions,
-  token: token
+  token: token,
+  embed: embed
 }
 
 

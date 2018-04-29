@@ -48,8 +48,8 @@ function checkGoogleVisionGuess(gvGuess) {
 
 function askSpotifyApi(safeGuessArray) {
   // Change to iterative (recursive in function below);
-  let url = spotifyApiRequest(safeGuessArray);
-  return url;
+  let albumId = spotifyApiRequest(safeGuessArray);
+  return albumId;
 }
 
 async function spotifyApiRequest(safeGuessArray) {
@@ -63,8 +63,8 @@ async function spotifyApiRequest(safeGuessArray) {
     if (spotifyData.albums.items.length === 0) {
       return spotifyApiRequest(splitSafeGuessArray.splice(-1, 1));
     } else {
-      let url = spotifyData.albums.items[0].external_urls.spotify;
-      return url;
+      let albumId = spotifyData.albums.items[0].id;
+      return albumId;
     }
   } else {
     console.log('SpotifyError');
@@ -93,8 +93,8 @@ module.exports = function(imagePath, req, res) {
   return askGoogleVision(imagePath)
   .then(checkGoogleVisionGuess)
   .then(askSpotifyApi)
-  .then((url) => {
-    return {error: false, url: url};
+  .then((albumId) => {
+    return {error: false, albumId: albumId};
   })
   .catch(function (err) {
     console.log("GCP Error");

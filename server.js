@@ -24,8 +24,8 @@ app.get('/', (req, res) => {
 });
 
 
-app.get('/player', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html');
+app.get('/camera', (req, res) => {
+  res.render('camera', {});
 });
 
 app.post('/player', upload.single('file'), async function(req, res) {
@@ -33,7 +33,9 @@ app.post('/player', upload.single('file'), async function(req, res) {
   let apiResponse = await apiChain(imagePath, req, res);
   // {error: bool, url: url, errorMessage: errorMessage}
   if (!apiResponse.error) {
-    res.redirect(apiResponse.url);
+    res.render('player', {
+      embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1] 
+    });
   } else {
     res.send("Error: " + apiResponse.errorMessage);
   }
@@ -42,6 +44,10 @@ app.post('/player', upload.single('file'), async function(req, res) {
   } catch (err) {
     console.log('error deleting ' + imagePath + ': ' + err);
   }
+});
+
+app.get('/player', function(req,res) {
+  res.redirect('/camera');
 });
 
 app.get('/auth', (req, res) => {
@@ -65,7 +71,7 @@ app.get('/auth-callback', (req, res) => {
       console.log("refresh_token: " + data.refresh_token);
       */
       spotify.token = data.access_token
-      res.redirect('/player');
+      res.redirect('/camera');
     })
     .catch(err => {
       res.send(err.message);
