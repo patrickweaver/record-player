@@ -45,9 +45,8 @@ function checkGoogleVisionGuess(gvGuess) {
 
 function askSpotifyApi(safeGuessArray) {
   async function spotifyApiRequest(safeGuessArray) {
-    
-    let safeGuess = safeGuessArray.join(" ");
     if (safeGuessArray.length > 0) {
+      let safeGuess = safeGuessArray.join(" ");
       let spotifyQueryOptions = spotify.queryOptions(spotify.token, safeGuess);
       let spotifyData = await rp(spotifyQueryOptions);
       if (spotifyData.albums.items.length === 0) {
