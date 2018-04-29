@@ -47,18 +47,25 @@ function checkGoogleVisionGuess(gvGuess) {
 
 
 function askSpotifyApi(spotifyToken, safeGuessArray) {
+  console.log("\nAsking Spotify");
+  console.log(spotifyToken);
+  console.log("");
   // Change to iterative (recursive in function below);
   let albumId = spotifyApiRequest(spotifyToken, safeGuessArray);
   return albumId;
 }
 
 async function spotifyApiRequest(spotifyToken, safeGuessArray) {
-  let splitSafeGuessArray = splitGuessAtHyphen(safeGuessArray);
+  if (safeGuessArray.length > 0) {
+    let splitSafeGuessArray = splitGuessAtHyphen(safeGuessArray);
+  } else {
+    throw('No items: ' + safeGuessArray);
+  }
   if (splitSafeGuessArray.length > 0) {
     let safeGuess = splitSafeGuessArray.join(" ");
     let spotifyQueryOptions = spotify.queryOptions(spotifyToken, safeGuess);
     let spotifyData = await rp(spotifyQueryOptions);
-    console.log('/nSpotify Data:');
+    console.log('\nSpotify Data:');
     console.log(JSON.stringify(spotifyData));
     if (spotifyData.albums.items.length === 0) {
       return spotifyApiRequest(splitSafeGuessArray.splice(-1, 1));
@@ -79,12 +86,14 @@ async function spotifyApiRequest(spotifyToken, safeGuessArray) {
 // artist which was confusing the spotify API.
 function splitGuessAtHyphen(safeGuessArray) {
   let splitArray = safeGuessArray;
-  let hyphenIndex = safeGuessArray.indexOf('-');  
-  if (hyphenIndex > -1) {
-    splitArray = safeGuessArray.slice(hyphenIndex + 1, safeGuessArray.length);
+  if (safeGuessArray.length > 0) {
+    let hyphenIndex = safeGuessArray.indexOf('-');  
+    if (hyphenIndex > -1) {
+      splitArray = safeGuessArray.slice(hyphenIndex + 1, safeGuessArray.length);
+    }
+    console.log("Split Array:");
+    console.log(splitArray);
   }
-  console.log("Split Array:");
-  console.log(splitArray);
   return splitArray;
 }
 

@@ -64,12 +64,9 @@ app.use(function(req, res, next) {
       rp(spotifyRefreshOptions)
       .then(data => {
         spotify.setCookies(res, data);
-        res.redirect('/');
+        next();
       })
       .catch(err => handleError(res, err));
-      let accessTokenData = spotify.refreshAccessToken(req.cookies.spotifyRefreshToken);
-      spotify.setCookies(res, accessTokenData);
-      next();
     } else {
       res.redirect('/auth');
     }
