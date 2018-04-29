@@ -32,21 +32,17 @@ if (0) {
 app.use(express.static('public'));
 
 app.get('/auth', (req, res) => {
-  let query = spotify.authQueryStringObject;
   let stateRandString = uuidv4();
   res.cookie('spotifyStateString', stateRandString);
+  let query = spotify.authQueryString(stateRandString);
   res.render('auth', {
     authUrl: "https://accounts.spotify.com/authorize?" + querystring.stringify(query)
   });
 });
 
 app.get('/auth-callback', (req, res) => {
-  if (req.query.state === spotify.stateString && !req.query.error) {
+  if (req.query.state === req.cookies.spotifyStateString && !req.query.error) {
     var code = req.query.code;
-    
-    if (code != req.cookies.spotifyStateString) {
-      handleError(res, "Wrong spotify auth code");
-    }
     
     const spotifyAuthOptions = spotify.authOptions(code);
     rp(spotifyAuthOptions)
@@ -56,7 +52,7 @@ app.get('/auth-callback', (req, res) => {
     })
     .catch(err => handleError(res, err));
   } else {
-   res.send("Error: " + req.query.error);     
+   handleError(res, "Wrong spotify auth code");     
   }
 });
 

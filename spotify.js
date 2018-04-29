@@ -21,12 +21,14 @@ function queryOptions(spotifyToken, safeGuess) {
 
 const stateString = 'abc123';
 
-const authQueryStringObject = {
-  client_id: SPOTIFY_CLIENT_ID,
-  response_type: "code",
-  redirect_uri: SPOTIFY_REDIRECT_URI,
-  state: stateString,
-  show_dialog: false
+function authQueryString(state) {
+  return {
+    client_id: SPOTIFY_CLIENT_ID,
+    response_type: "code",
+    redirect_uri: SPOTIFY_REDIRECT_URI,
+    state: state,
+    show_dialog: false
+  }
 }
 
 function authOptions(code) {
@@ -48,8 +50,7 @@ function setCookies(res, data) {
   let spotifyAccessOptions = {
     // Spotify sends token in seconds, express wants milliseconds
     // remove 5 seconds to avoid race conditions.
-    //maxAge: (data.expires_in - 5) * 1000
-    maxAge: 25000
+    maxAge: (data.expires_in - 5) * 1000
   }
   res.cookie('spotifyAccessToken', data.access_token, spotifyAccessOptions);
   if (data.refresh_token) {
@@ -77,7 +78,7 @@ const embed = ['<iframe src="https://open.spotify.com/embed?uri=spotify:album:',
 module.exports = {
   queryOptions: queryOptions,
   stateString: stateString,
-  authQueryStringObject: authQueryStringObject,
+  authQueryString: authQueryString,
   authOptions: authOptions,
   setCookies: setCookies,
   refreshOptions: refreshOptions,
