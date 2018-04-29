@@ -40,50 +40,35 @@ function checkGoogleVisionGuess(gvGuess) {
   }
   console.log("safeArray: ");
   console.log(safeArray);  
-  return safeArray.join(" ");   
+  return safeArray;   
 }
 
-async function askSpotifyApi(safeGuess) {
-  function spotifyApiRequest(safeGuess) {
+function askSpotifyApi(safeGuessArray) {
+  async function spotifyApiRequest(safeGuessArray) {
+    let safeGuess = safeGuessArray.join(" ");
     if (safeGuess.length > 0) {
       let spotifyQueryOptions = spotify.queryOptions(spotify.token, safeGuess);
       let spotifyData = await rp(spotifyQueryOptions);
+      if (spotifyData.albums.items.length === 0) {
+        return spotifyApiRequest(safeGuessArray.splice(-1, 1));
+      } else {
+        let url = spotifyData.albums.items[0].external_urls.spotify;
+        return url;
+      }
     } else {
+      console.log("SpotifyError");
       throw("No items: " + JSON.stringify(spotifyData));
     }
   }
   
-  
-  
-  
-  
-  
-  
-  
-  if (spotifyData.albums.items.length === 0) {
-    console.log("SpotifyError");
-    throw("No items: " + JSON.stringify(spotifyData)); 
-  }
-  
-  
+  let spotifyData = spotifyApiRequest(safeGuessArray);
   return spotifyData;
 }
-
-function checkSpotifyData(spotifyData) {
-  console.log("spotifyData: ");
-  console.log(JSON.stringify(spotifyData));
-  
-  let url = spotifyData.albums.items[0].external_urls.spotify;
-  console.log("url: " + url);
-  return url;
-}
-
 
 module.exports = function(imagePath, req, res) {
   return askGoogleVision(imagePath)
   .then(checkGoogleVisionGuess)
   .then(askSpotifyApi)
-  .then(checkSpotifyData)
   .then((url) => {
     return {error: false, url: url};
   })
