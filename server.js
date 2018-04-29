@@ -47,9 +47,15 @@ app.get('/auth-callback', (req, res) => {
       console.log("expires_in: " + data.expires_in);
       console.log("refresh_token: " + data.refresh_token);
       */
-      spotify.token = data.access_token
+      //spotify.token = data.access_token
       
-      res.cookie('spotifyAuth', data.access_token);
+      let spotifyAccessOptions = {
+        // Spotify sends token in seconds, express wants milliseconds
+        // remove 5 seconds to avoid race conditions.
+        maxAge: (data.expires_in - 5) * 1000
+      }
+      res.cookie('spotifyAccessToken', data.access_token, spotifyAccessOptions);
+      res.cookie('spotifyRefreshToken', data.refresh_token);
       res.redirect('/');
     })
     .catch(err => {
@@ -61,11 +67,23 @@ app.get('/auth-callback', (req, res) => {
 });
 
 
+function refreshSpotifyToken(refreshToken) {
+  
+  
+}
+
+
 app.use(function(req, res, next) {
-  if (req.cookies.spotifyAuth) {
+  if (req.cookies.spotifyAccessToken) {
     next();
   } else {
-    res.redirect('/auth');
+    if (req.cookies.spotifyRefreshToken) {
+      let accessToken = refreshSpotifyToken(req.cookies.spotifyRefreshToken);
+      console.log(accessToken);
+      res.send("access");
+    } else {
+      res.redirect('/auth');
+    }
   }
 });
 
