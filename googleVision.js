@@ -2,6 +2,7 @@ const gcpApiUrl = 'https://vision.googleapis.com/v1/images:annotate?'
 const GCP_API_KEY = process.env.GCP_API_KEY;
 
 function getGcpOptions(imageUrl) {
+  console.log(imageUrl);
   return {
     method: 'POST',
     uri: gcpApiUrl + 'key=' + GCP_API_KEY,

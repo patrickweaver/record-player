@@ -45,8 +45,9 @@ function checkGoogleVisionGuess(gvGuess) {
 
 function askSpotifyApi(safeGuessArray) {
   async function spotifyApiRequest(safeGuessArray) {
+    
     let safeGuess = safeGuessArray.join(" ");
-    if (safeGuess.length > 0) {
+    if (safeGuessArray.length > 0) {
       let spotifyQueryOptions = spotify.queryOptions(spotify.token, safeGuess);
       let spotifyData = await rp(spotifyQueryOptions);
       if (spotifyData.albums.items.length === 0) {
@@ -57,12 +58,12 @@ function askSpotifyApi(safeGuessArray) {
       }
     } else {
       console.log("SpotifyError");
-      throw("No items: " + JSON.stringify(spotifyData));
+      throw("No items: " + safeGuessArray);
     }
   }
   
-  let spotifyData = spotifyApiRequest(safeGuessArray);
-  return spotifyData;
+  let url = spotifyApiRequest(safeGuessArray);
+  return url;
 }
 
 module.exports = function(imagePath, req, res) {
