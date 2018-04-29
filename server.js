@@ -44,25 +44,14 @@ app.get('/auth-callback', (req, res) => {
     
     rp(spotifyAuthOptions)
     .then(data => {
-      /*
-      console.log("access_token: " + data.access_token);
-      console.log("token_type: " + data.token_type);
-      console.log("scope: " + data.scope);
-      console.log("expires_in: " + data.expires_in);
-      console.log("refresh_token: " + data.refresh_token);
-      */
       spotify.setCookies(res, data);
       res.redirect('/');
     })
-    .catch(err => {
-      res.send(err.message);
-    });
+    .catch(err => handleError(res, err));
   } else {
    res.send("Error: " + req.query.error);     
   }
 });
-
-
 
 
 
@@ -71,9 +60,16 @@ app.use(function(req, res, next) {
     next();
   } else {
     if (req.cookies.spotifyRefreshToken) {
+      const spotifyRefreshOptions = spotify.refreshOptions(req.cookies.spotifyRefreshToken);
+      rp(spotifyRefreshOptions)
+      .then(data => {
+        spotify.setCookies(res, data);
+        res.redirect('/');
+      })
+      .catch(err => handleError(res, err));
       let accessTokenData = spotify.refreshAccessToken(req.cookies.spotifyRefreshToken);
-      //console.log(JSON.stringify(accessToken));
-      res.send("access");
+      spotify.setCookies(res, accessTokenData);
+      next();
     } else {
       res.redirect('/auth');
     }
@@ -105,6 +101,16 @@ app.post('/player', upload.single('file'), async function(req, res) {
 
 app.get('/player', function(req,res) {
   res.redirect('/camera');
+});
+
+function handleError(res, err) {
+  console.log("/nError");
+  console.log(JSON.stringify(err));
+  res.redirect(err);
+}
+
+app.get('/error', function(req, res) {
+  res.render('error', {});
 });
 
 var listener = app.listen(process.env.PORT, function () {

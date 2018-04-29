@@ -57,9 +57,8 @@ function setCookies(res, data) {
   }
 }
 
-function refreshAccessToken(refreshToken) {
-  
-  let options = {
+function refreshOptions(refreshToken) {
+  return {
     method: 'post',
     uri: 'https://accounts.spotify.com/api/token',
     form: {
@@ -70,17 +69,6 @@ function refreshAccessToken(refreshToken) {
     },
     json: true
   }
-  
-  let tokenApiResponse = rp(options)
-  .then(function(data) {
-    console.log("Refresh");
-    console.log(data);
-  })
-  .catch(function(err) {
-    console.log("Refresh Error");
-    console.log(err);
-  });
-  return tokenApiResponse;
 }
 
 const embed = ['<iframe src="https://open.spotify.com/embed?uri=spotify:album:', '" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>'];
@@ -91,6 +79,8 @@ module.exports = {
   stateString: stateString,
   authQueryStringObject: authQueryStringObject,
   authOptions: authOptions,
+  setCookies: setCookies,
+  refreshOptions: refreshOptions,
   embed: embed
 }
 
