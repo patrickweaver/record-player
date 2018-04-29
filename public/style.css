@@ -7,7 +7,6 @@ body {
   line-height: 125%;
   font-family: sans-serif;
   width: 100%;
-  padding: 20px;
   max-width: 800px;
   margin: 0 auto;
   text-align: center;
@@ -22,6 +21,13 @@ button, input, label {
 
 #cover-form {
 
+}
+
+.box__dragndrop,
+.box__uploading,
+.box__success,
+.box__error {
+  display: none;
 }
 
 #spotify-auth-button {
