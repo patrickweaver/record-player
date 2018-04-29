@@ -6,7 +6,10 @@ const censoredWords = [
   'usa',
   'import',
   '-',
-  'lp'
+  'lp',
+  '[lp]',
+  'cd',
+  '[cd]'
 ];
 
 var semiCensoredWords = [
