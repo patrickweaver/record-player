@@ -12,16 +12,18 @@ function askGoogleVision(data, imagePath) {
     let gvGuess = await rp(gcpVisionOptions);
     if (gvGuess) {
       data.gvGuess = gvGuess;
-      resolve(gvGuess);
+      resolve(data);
     } else {
       reject(Error("No response from Google Vision"));
     }
   });
 }
 
-function checkGoogleVisionGuess(gvGuess) {
+function checkGoogleVisionGuess(data) {
+  const gvGuess = data.gvGuess;
   console.log(JSON.stringify(gvGuess));
   let guess = gvGuess.responses[0].webDetection.bestGuessLabels[0].label;
+  data.gvBestGuess = guess;
   console.log("guess: " + guess);
   let guessArray = guess.split(" ");
   let safeArray = []
@@ -41,23 +43,27 @@ function checkGoogleVisionGuess(gvGuess) {
     }
   }
   console.log('safeArray: ');
-  console.log(safeArray);  
-  return safeArray;   
+  console.log(safeArray);
+  data.safeArray = safeArray;
+  return data;   
 }
 
 
 
 
-async function askSpotifyApi(spotifyToken, safeGuessArray) {
+async function askSpotifyApi(spotifyToken, data) {
+  const safeGuessArray = data.safeArray;
   console.log("\nAsking Spotify");
   console.log(spotifyToken);
   console.log("");
   // Change to iterative (recursive in function below);
   //let albumId = spotifyApiRequest(spotifyToken, safeGuessArray);
   let albumId = false;
+  let spotifyData = {};
   let splitSafeGuessArray = splitGuessAtHyphen(safeGuessArray);
   for (var i = splitSafeGuessArray.length; i > 0; i--) {
-    albumId = await spotifyApiRequest(spotifyToken, splitSafeGuessArray.slice(0, i))
+    spotifyData = await spotifyApiRequest(spotifyToken, splitSafeGuessArray.slice(0, i));
+    albumId = spotifyData.albums.items[0].id;
     if (albumId) {
       console.log('\nAlbum Id: ' + JSON.stringify(albumId));
       break;
@@ -68,8 +74,8 @@ async function askSpotifyApi(spotifyToken, safeGuessArray) {
     console.log('Spotify Error -- Out of words to guess');
     throw('No items: ' + splitSafeGuessArray + '(' + safeGuessArray + ')');
   }
-  
-  return albumId;
+  data.albumId = albumId;
+  return data;
 }
 
 async function spotifyApiRequest(spotifyToken, splitSafeGuessArray) {
@@ -83,8 +89,7 @@ async function spotifyApiRequest(spotifyToken, splitSafeGuessArray) {
     console.log("No Items");
     return false;
   } else {
-    let albumId = spotifyData.albums.items[0].id;
-    return albumId;
+    return spotifyData;
   }
 }
 
@@ -113,9 +118,8 @@ function apiChain(imagePath, req, res) {
   return askGoogleVision(data, imagePath)
   .then(checkGoogleVisionGuess)
   .then(askSpotifyApi.bind(null, req.cookies.spotifyAccessToken))
-  .then((albumId) => {
+  .then((data) => {
     data.error = false;
-    data.albumId = albumId;
     return data;
   })
   .catch(function (err) {
