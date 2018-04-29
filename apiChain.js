@@ -5,11 +5,13 @@ const googleVision = require('./googleVision');
 const spotify = require('./spotify');
 const censoredWords = require('./censoredWords');
 
-function askGoogleVision(imagePath) {
+function askGoogleVision(data, imagePath) {
   return new Promise(async function(resolve, reject) {
+    console.log("\nImage: " + projectUrl + imagePath);
     let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
     let gvGuess = await rp(gcpVisionOptions);
     if (gvGuess) {
+      data.gvGuess = gvGuess;
       resolve(gvGuess);
     } else {
       reject(Error("No response from Google Vision"));
@@ -104,16 +106,24 @@ function splitGuessAtHyphen(safeGuessArray) {
 }
 
 
-module.exports = function(imagePath, req, res) {
-  return askGoogleVision(imagePath)
+function apiChain(imagePath, req, res) {
+  console.log("Image Path: " + imagePath);
+  let data = {};
+  
+  return askGoogleVision(data, imagePath)
   .then(checkGoogleVisionGuess)
   .then(askSpotifyApi.bind(null, req.cookies.spotifyAccessToken))
   .then((albumId) => {
-    return {error: false, albumId: albumId};
+    data.error = false;
+    data.albumId = albumId;
+    return data;
   })
   .catch(function (err) {
-    console.log("GCP Error");
     console.log(err);
-    return {error: true, errorMessage: err};
+    data.error = true;
+    data.errorMessage = err;
+    return data;
   });
 }
+
+module.exports = apiChain;

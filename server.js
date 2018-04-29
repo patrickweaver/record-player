@@ -87,6 +87,7 @@ app.post('/player', upload.single('file'), async function(req, res) {
   // {error: bool, url: url, errorMessage: errorMessage}
   if (!apiResponse.error) {
     res.render('player', {
+      googleVisionGuess: apiResponse.gvGuess,
       embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1] 
     });
   } else {
