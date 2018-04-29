@@ -17,8 +17,6 @@ const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const apiChain = require('./apiChain');
 const spotify = require('./spotify');
 
-
-
 /* Routes */
 if (0) {
   app.use((req,res) => {
@@ -32,9 +30,7 @@ if (0) {
 app.use(express.static('public'));
 
 app.get('/auth', (req, res) => {
-  console.log('auth');
   let query = spotify.authQueryStringObject;
-  //res.redirect("https://accounts.spotify.com/authorize?" + querystring.stringify(query));
   res.render('auth', {
     authUrl: "https://accounts.spotify.com/authorize?" + querystring.stringify(query)
   });
@@ -55,16 +51,7 @@ app.get('/auth-callback', (req, res) => {
       console.log("expires_in: " + data.expires_in);
       console.log("refresh_token: " + data.refresh_token);
       */
-      //spotify.token = data.access_token
-      
-      let spotifyAccessOptions = {
-        // Spotify sends token in seconds, express wants milliseconds
-        // remove 5 seconds to avoid race conditions.
-        //maxAge: (data.expires_in - 5) * 1000
-        maxAge: 25000
-      }
-      res.cookie('spotifyAccessToken', data.access_token, spotifyAccessOptions);
-      res.cookie('spotifyRefreshToken', data.refresh_token);
+      spotify.setCookies(res, data);
       res.redirect('/');
     })
     .catch(err => {
@@ -76,29 +63,7 @@ app.get('/auth-callback', (req, res) => {
 });
 
 
-function refreshSpotifyToken(refreshToken) {
-  
-  let options = {
-    method: 'post',
-    uri: 'https://accounts.spotify.com/api/token',
-    form: {
-      grant_type:	'refresh_token',
-      refresh_token: refreshToken
-    },
-    json: true
-  }
-  
-  let tokenApiResponse = rp(options)
-  .then(function(data) {
-    console.log("Refresh");
-    console.log(data);
-  })
-  .catch(function(err) {
-    console.log("Refresh Error");
-    console.log(err);
-  });
-  return tokenApiResponse;
-}
+
 
 
 app.use(function(req, res, next) {
@@ -106,8 +71,8 @@ app.use(function(req, res, next) {
     next();
   } else {
     if (req.cookies.spotifyRefreshToken) {
-      let accessToken = refreshSpotifyToken(req.cookies.spotifyRefreshToken);
-      console.log(JSON.stringify(accessToken));
+      let accessTokenData = spotify.refreshAccessToken(req.cookies.spotifyRefreshToken);
+      //console.log(JSON.stringify(accessToken));
       res.send("access");
     } else {
       res.redirect('/auth');
