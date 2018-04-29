@@ -13,6 +13,8 @@ var rp = require('request-promise-native');
 const querystring = require('querystring');
 const url = require('url');
 const fs = require('fs');
+const uuidv4 = require('uuid/v4');
+
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const apiChain = require('./apiChain');
 const spotify = require('./spotify');
@@ -31,6 +33,8 @@ app.use(express.static('public'));
 
 app.get('/auth', (req, res) => {
   let query = spotify.authQueryStringObject;
+  let stateRandString = uuidv4();
+  res.cookie('spotifyStateString', stateRandString);
   res.render('auth', {
     authUrl: "https://accounts.spotify.com/authorize?" + querystring.stringify(query)
   });
@@ -40,8 +44,11 @@ app.get('/auth-callback', (req, res) => {
   if (req.query.state === spotify.stateString && !req.query.error) {
     var code = req.query.code;
     
-    const spotifyAuthOptions = spotify.authOptions(code);
+    if (code != req.cookies.spotifyStateString) {
+      handleError(res, "Wrong spotify auth code");
+    }
     
+    const spotifyAuthOptions = spotify.authOptions(code);
     rp(spotifyAuthOptions)
     .then(data => {
       spotify.setCookies(res, data);

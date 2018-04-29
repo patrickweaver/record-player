@@ -71,6 +71,7 @@ async function askSpotifyApi(spotifyToken, safeGuessArray) {
 }
 
 async function spotifyApiRequest(spotifyToken, splitSafeGuessArray) {
+  console.log("Asking with: " + splitSafeGuessArray);
   let safeGuess = splitSafeGuessArray.join(" ");
   let spotifyQueryOptions = spotify.queryOptions(spotifyToken, safeGuess);
   let spotifyData = await rp(spotifyQueryOptions);
