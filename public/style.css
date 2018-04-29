@@ -30,6 +30,15 @@ button, input, label {
   display: none;
 }
 
+.box.has-advanced-upload {
+  background-color: white;
+  outline: 2px dashed black;
+  outline-offset: -10px;
+}
+.box.has-advanced-upload .box__dragndrop {
+  display: inline;
+}
+
 #spotify-auth-button {
   background-color: #1db954;
   color: white;
