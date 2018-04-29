@@ -3,10 +3,11 @@
 </h2>
 <form id="cover-form" action="/player" method="post" enctype="multipart/form-data">
   <label>Record Cover Photo:</label>
-  <input type="file" name="file">
-  <button type="submit" value="submit">
-    Upload
-  </button>
+  <input type="file" name="file" id="album-cover-image" onchange="document.getElementById('cover-form').submit();">
 </form>
+
+<div id="spinner">
+  
+</div>
   
 
