@@ -5,7 +5,6 @@ const censoredWords = [
   '[vinyl]',
   'usa',
   'import',
-  '-',
   'lp',
   '[lp]',
   'cd',

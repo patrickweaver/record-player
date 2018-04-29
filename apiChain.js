@@ -43,27 +43,49 @@ function checkGoogleVisionGuess(gvGuess) {
   return safeArray;   
 }
 
+
+
+
 function askSpotifyApi(safeGuessArray) {
-  async function spotifyApiRequest(safeGuessArray) {
-    if (safeGuessArray.length > 0) {
-      let safeGuess = safeGuessArray.join(" ");
-      let spotifyQueryOptions = spotify.queryOptions(spotify.token, safeGuess);
-      let spotifyData = await rp(spotifyQueryOptions);
-      if (spotifyData.albums.items.length === 0) {
-        return spotifyApiRequest(safeGuessArray.splice(-1, 1));
-      } else {
-        let url = spotifyData.albums.items[0].external_urls.spotify;
-        return url;
-      }
-    } else {
-      console.log("SpotifyError");
-      throw("No items: " + safeGuessArray);
-    }
-  }
-  
+  // Change to iterative (recursive in function below);
   let url = spotifyApiRequest(safeGuessArray);
   return url;
 }
+
+async function spotifyApiRequest(safeGuessArray) {
+  let splitSafeGuessArray = splitGuessAtHyphen(safeGuessArray);
+  if (splitSafeGuessArray.length > 0) {
+    let safeGuess = splitSafeGuessArray.join(" ");
+    let spotifyQueryOptions = spotify.queryOptions(spotify.token, safeGuess);
+    let spotifyData = await rp(spotifyQueryOptions);
+    if (spotifyData.albums.items.length === 0) {
+      return spotifyApiRequest(splitSafeGuessArray.splice(-1, 1));
+    } else {
+      let url = spotifyData.albums.items[0].external_urls.spotify;
+      return url;
+    }
+  } else {
+    console.log('SpotifyError');
+    throw('No items: ' + splitSafeGuessArray + '(' + safeGuessArray + ')');
+  }
+}
+
+
+// This function throws away everything before a hyphen (-) character
+// from the Google Vision guess. This is because on a few example
+// queries it was adding things like the record label name along with the
+// artist which was confusing the spotify API.
+function splitGuessAtHyphen(safeGuessArray) {
+  let splitArray = safeGuessArray;
+  let hyphenIndex = safeGuessArray.indexOf('-');  
+  if (hyphenIndex > -1) {
+    splitArray = safeGuessArray.slice(hyphenIndex + 1, safeGuessArray.length);
+  }
+  console.log("Split Array:");
+  console.log(splitArray);
+  return splitArray;
+}
+
 
 module.exports = function(imagePath, req, res) {
   return askGoogleVision(imagePath)
