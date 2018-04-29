@@ -46,7 +46,7 @@ function checkGoogleVisionGuess(gvGuess) {
 
 
 
-function askSpotifyApi(spotifyToken, safeGuessArray) {
+async function askSpotifyApi(spotifyToken, safeGuessArray) {
   console.log("\nAsking Spotify");
   console.log(spotifyToken);
   console.log("");
@@ -55,14 +55,15 @@ function askSpotifyApi(spotifyToken, safeGuessArray) {
   let albumId = false;
   let splitSafeGuessArray = splitGuessAtHyphen(safeGuessArray);
   for (var i = splitSafeGuessArray.length; i > 0; i--) {
-    albumId = spotifyApiRequest(spotifyToken, splitSafeGuessArray.slice(0, i))
+    albumId = await spotifyApiRequest(spotifyToken, splitSafeGuessArray.slice(0, i))
     if (albumId) {
+      console.log('\nAlbum Id: ' + JSON.stringify(albumId));
       break;
     }
   }
   
   if (!albumId) {
-    console.log('SpotifyError');
+    console.log('Spotify Error -- Out of words to guess');
     throw('No items: ' + splitSafeGuessArray + '(' + safeGuessArray + ')');
   }
   
@@ -76,13 +77,13 @@ async function spotifyApiRequest(spotifyToken, splitSafeGuessArray) {
   console.log('\nSpotify Data:');
   console.log(JSON.stringify(spotifyData));
   if (spotifyData.albums.items.length === 0) {
+    console.log("No Items");
     return false;
   } else {
     let albumId = spotifyData.albums.items[0].id;
     return albumId;
   }
 }
-
 
 // This function throws away everything before a hyphen (-) character
 // from the Google Vision guess. This is because on a few example
