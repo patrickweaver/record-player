@@ -46,17 +46,17 @@ function checkGoogleVisionGuess(gvGuess) {
 
 
 
-function askSpotifyApi(safeGuessArray) {
+function askSpotifyApi(spotifyToken, safeGuessArray) {
   // Change to iterative (recursive in function below);
-  let albumId = spotifyApiRequest(safeGuessArray);
+  let albumId = spotifyApiRequest(spotifyToken, safeGuessArray);
   return albumId;
 }
 
-async function spotifyApiRequest(safeGuessArray) {
+async function spotifyApiRequest(spotifyToken, safeGuessArray) {
   let splitSafeGuessArray = splitGuessAtHyphen(safeGuessArray);
   if (splitSafeGuessArray.length > 0) {
     let safeGuess = splitSafeGuessArray.join(" ");
-    let spotifyQueryOptions = spotify.queryOptions(spotify.token, safeGuess);
+    let spotifyQueryOptions = spotify.queryOptions(spotifyToken, safeGuess);
     let spotifyData = await rp(spotifyQueryOptions);
     console.log('/nSpotify Data:');
     console.log(JSON.stringify(spotifyData));
@@ -92,7 +92,7 @@ function splitGuessAtHyphen(safeGuessArray) {
 module.exports = function(imagePath, req, res) {
   return askGoogleVision(imagePath)
   .then(checkGoogleVisionGuess)
-  .then(askSpotifyApi)
+  .then(askSpotifyApi.bind(null, req.cookies.spotifyAccessToken))
   .then((albumId) => {
     return {error: false, albumId: albumId};
   })

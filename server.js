@@ -79,6 +79,7 @@ app.get('/auth-callback', (req, res) => {
 function refreshSpotifyToken(refreshToken) {
   
   let options = {
+    method: 'post',
     uri: 'https://accounts.spotify.com/api/token',
     form: {
       grant_type:	'refresh_token',
@@ -87,7 +88,15 @@ function refreshSpotifyToken(refreshToken) {
     json: true
   }
   
-  let tokenApiResponse = rp(options);
+  let tokenApiResponse = rp(options)
+  .then(function(data) {
+    console.log("Refresh");
+    console.log(data);
+  })
+  .catch(function(err) {
+    console.log("Refresh Error");
+    console.log(err);
+  });
   return tokenApiResponse;
 }
 
