@@ -52,7 +52,10 @@ app.get('/player', function(req,res) {
 
 app.get('/auth', (req, res) => {
   let query = spotify.authQueryStringObject;
-  res.redirect("https://accounts.spotify.com/authorize?" + querystring.stringify(query));
+  //res.redirect("https://accounts.spotify.com/authorize?" + querystring.stringify(query));
+  res.render('auth', {
+    authUrl: "https://accounts.spotify.com/authorize?" + querystring.stringify(query)
+  });
 });
 
 app.get('/auth-callback', (req, res) => {

@@ -14,3 +14,11 @@ button, input, label {
   display: block;
   margin: 1.5em 0;
 }
+
+#spotify-auth-button {
+  background-color: #1db954;
+  color: white;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 7px;
+}
