@@ -63,7 +63,9 @@ async function askSpotifyApi(spotifyToken, data) {
   let splitSafeGuessArray = splitGuessAtHyphen(safeGuessArray);
   for (var i = splitSafeGuessArray.length; i > 0; i--) {
     spotifyData = await spotifyApiRequest(spotifyToken, splitSafeGuessArray.slice(0, i));
-    albumId = spotifyData.albums.items[0].id;
+    if (spotifyData.albums && spotifyData.albums.items && spotifyData.albums.items[0]) {
+      albumId = spotifyData.albums.items[0].id;
+    }
     if (albumId) {
       console.log('\nAlbum Id: ' + JSON.stringify(albumId));
       break;

@@ -8,7 +8,8 @@ const censoredWords = [
   'lp',
   '[lp]',
   'cd',
-  '[cd]'
+  '[cd]',
+  'soundtrack'
 ];
 
 var semiCensoredWords = [
