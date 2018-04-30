@@ -35,7 +35,9 @@ if (isAdvancedUpload) {
     console.log("DROP!");
     droppedFiles = e.originalEvent.dataTransfer.files;
     console.log(droppedFiles[0]);
-    $.post('player', {file: droppedFiles[0]}, function(data) {
+    var formData = new FormData();
+    formData.append('file', droppedFiles[0]);
+    $.post('player', {formData}, function(data) {
       console.log(data); 
     });
   });

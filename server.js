@@ -83,6 +83,9 @@ app.get('/', (req, res) => {
 
 app.post('/player', upload.single('file'), async function(req, res) {
   console.log("/player");
+  for (var j in req.body) {
+    console.log(j + ": " + req.body[j]);
+  }
   let imagePath = '/images/' + req.file.filename;
   let apiResponse = await apiChain(imagePath, req, res);
   // {error: bool, url: url, errorMessage: errorMessage}
