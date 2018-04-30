@@ -83,17 +83,22 @@ app.get('/', (req, res) => {
 
 app.post('/player', upload.single('file'), async function(req, res) {
   console.log("/player");
-  for (var j in req.body) {
-    console.log(j + ": " + req.body[j]);
-  }
+  console.log("req.body.async: " + req.body.async);
   let imagePath = '/images/' + req.file.filename;
   let apiResponse = await apiChain(imagePath, req, res);
-  // {error: bool, url: url, errorMessage: errorMessage}
   if (!apiResponse.error) {
-    res.render('player', {
-      googleVisionGuess: apiResponse.gvBestGuess,
-      embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1] 
-    });
+    if (req.body.async) {
+      res.json({
+        error: false,
+        googleVisionGuess: apiResponse.gvBestGuess,
+        albumId: apiResponse.albumId
+      });
+    } else {
+      res.render('player', {
+        googleVisionGuess: apiResponse.gvBestGuess,
+        embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1] 
+      });
+    }
   } else {
     res.send("Error: " + apiResponse.errorMessage);
   }
@@ -105,6 +110,12 @@ app.post('/player', upload.single('file'), async function(req, res) {
 });
 
 app.get('/player', function(req,res) {
+  if (req.query.albumId && req.query.gvBestGuess) {
+    res.render('player', {
+      googleVisionGuess: req.query.gvBestGuess,
+      embed: spotify.embed[0] + req.query.albumId + spotify.embed[1] 
+    })
+  }
   res.redirect('/camera');
 });
 

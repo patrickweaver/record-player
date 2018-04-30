@@ -37,8 +37,18 @@ if (isAdvancedUpload) {
     console.log(droppedFiles[0]);
     var formData = new FormData();
     formData.append('file', droppedFiles[0]);
-    $.post('player', {formData}, function(data) {
-      console.log(data); 
+    formData.append('async', true);
+    
+    jQuery.ajax({
+      url: 'player',
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: 'POST',
+      success: function(data){
+          console.log(data);
+      }
     });
   });
 
