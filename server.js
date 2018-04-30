@@ -122,7 +122,7 @@ app.get('/player', function(req,res) {
       embed: spotify.embed[0] + req.query.albumId + spotify.embed[1] 
     })
   } else {
-    handleError(res, "No album id");
+    res.redirect('/');
   }
 });
 

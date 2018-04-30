@@ -2,7 +2,7 @@ console.log("TEST");
 
 function submitCoverForm() {
   document.getElementById('cover-form').submit();
-  document.getElementById('spinner').style.display = "block";
+
 }
 
 
@@ -11,7 +11,7 @@ var isAdvancedUpload = function() {
   return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
 }();
 
-var $form = $('.box');
+var $form = $('#cover-form');
 
 if (isAdvancedUpload) {
   $form.addClass('has-advanced-upload');
@@ -33,6 +33,8 @@ if (isAdvancedUpload) {
   })
   .on('drop', function(e) {
     console.log("DROP!");
+    document.getElementById('cover-form').style.display = "none";
+    document.getElementById('spinner').style.display = "block";
     droppedFiles = e.originalEvent.dataTransfer.files;
     console.log(droppedFiles[0]);
     var formData = new FormData();

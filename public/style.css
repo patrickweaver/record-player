@@ -23,6 +23,10 @@ button, input, label {
 
 }
 
+#file {
+  display: none;
+}
+
 .box__dragndrop,
 .box__uploading,
 .box__success,
@@ -30,16 +34,16 @@ button, input, label {
   display: none;
 }
 
-.box.has-advanced-upload {
+#cover-form.has-advanced-upload {
   background-color: white;
   outline: 2px dashed black;
   outline-offset: -10px;
 }
-.box.has-advanced-upload .box__dragndrop {
+#cover-form.has-advanced-upload .box__dragndrop {
   display: inline;
 }
 
-.box.is-dragover {
+#cover-form.is-dragover {
   background-color: grey;
 }
 
