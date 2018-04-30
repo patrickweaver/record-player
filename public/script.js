@@ -47,7 +47,7 @@ if (isAdvancedUpload) {
       processData: false,
       type: 'POST',
       success: function(data){
-          console.log(data);
+          window.location.replace('player?albumId=' + data.albumId + '&googleVisionGuess=' + data.googleVisionGuess);
       }
     });
   });

@@ -82,8 +82,6 @@ app.get('/', (req, res) => {
 });
 
 app.post('/player', upload.single('file'), async function(req, res) {
-  console.log("/player");
-  console.log("req.body.async: " + req.body.async);
   let imagePath = '/images/' + req.file.filename;
   let apiResponse = await apiChain(imagePath, req, res);
   if (!apiResponse.error) {
@@ -100,7 +98,14 @@ app.post('/player', upload.single('file'), async function(req, res) {
       });
     }
   } else {
-    res.send("Error: " + apiResponse.errorMessage);
+    if (req.body.async) {
+      res.json({
+        error: true,
+        errorMessage: apiResponse.errorMessage
+      });
+    } else {
+      handleError(res, "Error: " + apiResponse.errorMessage);
+    }
   }
   try {
     fs.unlinkSync('/app/public' + imagePath);
@@ -109,20 +114,22 @@ app.post('/player', upload.single('file'), async function(req, res) {
   }
 });
 
+
 app.get('/player', function(req,res) {
-  if (req.query.albumId && req.query.gvBestGuess) {
+  if (req.query.albumId && req.query.googleVisionGuess) {
     res.render('player', {
-      googleVisionGuess: req.query.gvBestGuess,
+      googleVisionGuess: req.query.googleVisionGuess,
       embed: spotify.embed[0] + req.query.albumId + spotify.embed[1] 
     })
+  } else {
+    handleError(res, "No album id");
   }
-  res.redirect('/camera');
 });
 
 function handleError(res, err) {
   console.log("\nError");
   console.log(JSON.stringify(err));
-  res.redirect(err);
+  res.redirect('/error');
 }
 
 app.get('/error', function(req, res) {
