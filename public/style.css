@@ -6,6 +6,10 @@ body {
   font-size: 125%;
   line-height: 125%;
   font-family: sans-serif;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 button, input, label {
@@ -13,4 +17,71 @@ button, input, label {
   line-height: 100%;
   display: block;
   margin: 1.5em 0;
+}
+
+#cover-form {
+  padding: 1em 10px;
+}
+
+#album-cover-image {
+  display: none;
+}
+
+.box__dragndrop,
+.box__uploading,
+.box__success,
+.box__error {
+  display: none;
+}
+
+#cover-form.has-advanced-upload {
+  background-color: white;
+  outline: 2px dashed black;
+  outline-offset: -10px;
+}
+
+#cover-form.has-advanced-upload .box__dragndrop {
+  display: inline;
+}
+
+#cover-form.is-dragover {
+  background-color: grey;
+}
+
+#spotify-auth-button {
+  background-color: #1db954;
+  color: white;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 7px;
+}
+
+#spinner{
+  display: none;
+}
+
+#spinner > .logo {
+  width: 150px;
+  position: absolute;
+  left: Calc(50% - 75px);
+  top: 200px;
+  display: block;
+}
+
+#spotify-logo {
+  animation: spotifyOrbit 4s linear infinite;
+}
+
+#google-cloud-logo {
+  animation: googleCloudOrbit 4s linear infinite;
+}
+
+@keyframes spotifyOrbit {
+    from { transform: rotate(0deg) translateX(-150px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(-150px) rotate(-360deg); }
+}
+
+@keyframes googleCloudOrbit {
+    from { transform: rotate(-360deg) translateX(150px) rotate(360deg); }
+    to   { transform: rotate(0deg) translateX(150px) rotate(0deg); }
 }
