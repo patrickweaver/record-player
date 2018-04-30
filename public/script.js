@@ -2,7 +2,6 @@ console.log("TEST");
 
 function submitCoverForm() {
   document.getElementById('cover-form').submit();
-
 }
 
 

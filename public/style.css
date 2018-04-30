@@ -20,10 +20,10 @@ button, input, label {
 }
 
 #cover-form {
-
+  padding: 1em 10px;
 }
 
-#file {
+#album-cover-image {
   display: none;
 }
 
@@ -39,6 +39,7 @@ button, input, label {
   outline: 2px dashed black;
   outline-offset: -10px;
 }
+
 #cover-form.has-advanced-upload .box__dragndrop {
   display: inline;
 }
