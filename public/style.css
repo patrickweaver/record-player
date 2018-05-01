@@ -24,8 +24,13 @@ button, input, label {
 #site-title {
   background-color: #f8f8f8;
   border-radius: 3px;
-  padding: .5em;
-  margin: 1em
+  padding: 1em;
+  margin-top: 1em;
+  display: inline-block;
+}
+
+#site-title h1 {
+  margin: 0;
 }
 
 #site-title a {
@@ -34,20 +39,21 @@ button, input, label {
 }
 
 #camera-label {
-   
+  cursor: pointer;
 }
 
 #camera-image {
   width: 50px;
-  display: inline;
 }
 
 #camera-label-text {
-   
+  width: 100%;
+  display: block;
 }
 
 #cover-form {
-  padding: 1em 10px;
+  margin-top: 1em;
+  padding: 1em;
 }
 
 #album-cover-image {
@@ -73,7 +79,7 @@ button, input, label {
 }
 
 #cover-form.is-dragover {
-  background-color: grey;
+  background-color: #e9d1f9;
 }
 
 #spotify-auth-button {
@@ -115,5 +121,24 @@ button, input, label {
 }
 
 #info-card {
-  background-color: #f8f8f8; 
+  background-color: #f8f8f8;
+  margin-top: 1em;
+  padding: 1em;
+  display: inline-block;
+}
+
+#info-card p {
+  margin: 0;
+}
+
+#info-card a {
+  color: #333;
+}
+
+#spotify-embed {
+  margin-top: 1em;
+  padding: .5em;
+  border-radius: 3px;
+  background-color: #f8f8f8;
+  display: inline-block;
 }
