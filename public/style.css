@@ -42,6 +42,10 @@ button, input, label {
   color: black;
 }
 
+#explanation {
+  text-align: justify;
+}
+
 #spotify-login-button {
   padding: 1.5em 1em;
 }
@@ -146,3 +150,6 @@ button, input, label {
   background-color: #f8f8f8;
   display: inline-block;
 }
+
+
+/* Most of the emojis in the background from Emoji one */

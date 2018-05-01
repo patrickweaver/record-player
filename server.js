@@ -21,16 +21,9 @@ const spotify = require('./spotify');
 
 /* Routes */
 
-
-app.get('/logout', (req,res) => {
-  res.clearCookie('spotifyAccessToken');
-  res.clearCookie('spotifyRefreshToken');
-  res.redirect('/');
-});
-
-
 app.use(express.static('public'));
 
+// Explains the app and has Spotify login link
 app.get('/auth', (req, res) => {
   let stateRandString = uuidv4();
   res.cookie('spotifyStateString', stateRandString);
@@ -41,6 +34,7 @@ app.get('/auth', (req, res) => {
   });
 });
 
+// Spotify redirects to this url, it sets cookies, then redirects
 app.get('/auth-callback', (req, res) => {
   if (req.query.state === req.cookies.spotifyStateString && !req.query.error) {
     var code = req.query.code;
@@ -57,8 +51,14 @@ app.get('/auth-callback', (req, res) => {
   }
 });
 
+// Logs out of Spotify, then redirects
+app.get('/logout', (req,res) => {
+  res.clearCookie('spotifyAccessToken');
+  res.clearCookie('spotifyRefreshToken');
+  res.redirect('/');
+});
 
-
+// Checks for login cookie, if it doesn't find it redirects
 app.use(function(req, res, next) {
   if (req.cookies.spotifyAccessToken) {
     next();
@@ -78,10 +78,13 @@ app.use(function(req, res, next) {
 });
 
 
+// Camera is default view, unless not logged in
 app.get('/', (req, res) => {
   res.render('camera', {});
 });
 
+// This route works for both the async request from the frontend
+// or as a form submittion
 app.post('/player', upload.single('file'), async function(req, res) {
   let imagePath = '/images/' + req.file.filename;
   let apiResponse = await apiChain(imagePath, req, res);
@@ -115,7 +118,8 @@ app.post('/player', upload.single('file'), async function(req, res) {
   }
 });
 
-
+// Once the async apiChain request returns, frontend redirects to player
+// with Spotify album ID as query string parameter
 app.get('/player', function(req,res) {
   if (req.query.albumId && req.query.googleVisionGuess) {
     res.render('player', {
