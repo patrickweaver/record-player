@@ -21,6 +21,18 @@ button, input, label {
   margin: 1.5em 0;
 }
 
+#site-title {
+  background-color: #f8f8f8;
+  border-radius: 3px;
+  padding: .5em;
+  margin: 1em
+}
+
+#site-title a {
+  text-decoration: none;
+  color: black;
+}
+
 #cover-form {
   padding: 1em 10px;
 }
@@ -37,7 +49,7 @@ button, input, label {
 }
 
 #cover-form.has-advanced-upload {
-  background-color: rgba(255,255,255,.95);
+  background-color: #f8f8f8;
   outline: 2px dashed black;
   outline-offset: -10px;
 }
@@ -89,5 +101,5 @@ button, input, label {
 }
 
 #info-card {
-  background-color: rgba(255,255,255,.95); 
+  background-color: #f8f8f8; 
 }
