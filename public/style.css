@@ -14,6 +14,10 @@ body {
   background-size: 200px;
 }
 
+a {
+  color: #333;
+}
+
 button, input, label {
   font-size: 100%;
   line-height: 100%;
@@ -133,10 +137,6 @@ button, input, label {
 
 #info-card p {
   margin: 0;
-}
-
-#info-card a {
-  color: #333;
 }
 
 #spotify-embed {

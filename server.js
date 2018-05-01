@@ -22,13 +22,11 @@ const spotify = require('./spotify');
 /* Routes */
 
 
-if (0) {
-  app.use((req,res) => {
-    res.clearCookie('spotifyAccessToken');
-    res.clearCookie('spotifyRefreshToken');
-    res.send("<h1>Clear</h1>");
-  });
-}
+app.get('/logout', (req,res) => {
+  res.clearCookie('spotifyAccessToken');
+  res.clearCookie('spotifyRefreshToken');
+  res.redirect('/');
+});
 
 
 app.use(express.static('public'));
@@ -38,7 +36,8 @@ app.get('/auth', (req, res) => {
   res.cookie('spotifyStateString', stateRandString);
   let query = spotify.authQueryString(stateRandString);
   res.render('auth', {
-    authUrl: "https://accounts.spotify.com/authorize?" + querystring.stringify(query)
+    authUrl: "https://accounts.spotify.com/authorize?" + querystring.stringify(query),
+    loggedOut: true
   });
 });
 
