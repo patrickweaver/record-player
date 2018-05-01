@@ -21,7 +21,7 @@ button, input, label {
   margin: 1.5em 0;
 }
 
-#site-title {
+.card {
   background-color: #f8f8f8;
   border-radius: 3px;
   padding: 1em;
@@ -36,6 +36,10 @@ button, input, label {
 #site-title a {
   text-decoration: none;
   color: black;
+}
+
+#spotify-login-button {
+  padding: 1.5em 1em;
 }
 
 #camera-label {

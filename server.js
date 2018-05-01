@@ -20,6 +20,8 @@ const apiChain = require('./apiChain');
 const spotify = require('./spotify');
 
 /* Routes */
+
+
 if (0) {
   app.use((req,res) => {
     res.clearCookie('spotifyAccessToken');
