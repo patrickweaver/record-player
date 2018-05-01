@@ -84,7 +84,8 @@ app.get('/', (req, res) => {
 });
 
 // This route works for both the async request from the frontend
-// or as a form submittion
+// or as a form submittion if the fancy uploader doesn't work (no js).
+// At the end the image is deleted from the server
 app.post('/player', upload.single('file'), async function(req, res) {
   let imagePath = '/images/' + req.file.filename;
   let apiResponse = await apiChain(imagePath, req, res);
@@ -131,6 +132,7 @@ app.get('/player', function(req,res) {
   }
 });
 
+// General error handling
 function handleError(res, err) {
   console.log("\nError");
   console.log(JSON.stringify(err));

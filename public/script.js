@@ -39,7 +39,8 @@ var $form = $('#cover-form');
 
 if (isAdvancedUpload) {
   $form.addClass('has-advanced-upload');
-  $('#
+  $('.box__button').hide();
+  $('.box__file').hide();
 }
 
 if (isAdvancedUpload) {

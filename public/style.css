@@ -68,10 +68,6 @@ button, input, label {
   padding: 1em;
 }
 
-#album-cover-image {
-  display: none;
-}
-
 .box__dragndrop,
 .box__uploading,
 .box__success,
