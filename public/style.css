@@ -33,8 +33,17 @@ button, input, label {
   color: black;
 }
 
+#camera-label {
+   
+}
+
 #camera-image {
   width: 50px;
+  display: inline;
+}
+
+#camera-label-text {
+   
 }
 
 #cover-form {
