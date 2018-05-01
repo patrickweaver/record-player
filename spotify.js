@@ -19,8 +19,6 @@ function queryOptions(spotifyToken, safeGuess) {
   }
 }
 
-const stateString = 'abc123';
-
 function authQueryString(state) {
   return {
     client_id: SPOTIFY_CLIENT_ID,
@@ -77,7 +75,6 @@ const embed = ['<iframe src="https://open.spotify.com/embed?uri=spotify:album:',
 
 module.exports = {
   queryOptions: queryOptions,
-  stateString: stateString,
   authQueryString: authQueryString,
   authOptions: authOptions,
   setCookies: setCookies,
