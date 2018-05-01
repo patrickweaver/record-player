@@ -3,11 +3,14 @@
   <h2>
      Take a picture of a record cover
   </h2>
-  <label>Record Cover Photo:</label>
-  <!--<input type="file" name="file" id="album-cover-image" onchange="submitCoverForm()">-->
   <div class="box__input">
     <input class="box__file" type="file" name="file" id="album-cover-image" onchange="submitCoverFormOnChange()"/>
-    <label for="album-cover-image"><strong>Select a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
+    <label for="album-cover-image">
+      <img id="camera-image" src="https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fcamera-with-flash_1f4f8.png?1525140907300">
+      <span id="camera-label">
+        <strong>Click to select or take a picture</strong><span class="box__dragndrop"> or drag one here</span>.
+      </span>
+    </label>
     <!--<button class="box__button" type="submit">Upload</button>-->
   </div>
   <div class="box__uploading">Uploading&hellip;</div>

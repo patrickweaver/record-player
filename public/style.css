@@ -7,7 +7,7 @@ body {
   line-height: 125%;
   font-family: sans-serif;
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
   text-align: center;
   background: url(https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fmusic-pattern.png?1525139512471);
@@ -33,6 +33,10 @@ button, input, label {
   color: black;
 }
 
+#camera-image {
+  width: 50px;
+}
+
 #cover-form {
   padding: 1em 10px;
 }
@@ -50,7 +54,8 @@ button, input, label {
 
 #cover-form.has-advanced-upload {
   background-color: #f8f8f8;
-  outline: 2px dashed black;
+  border-radius: 5px;
+  outline: 5px dotted black;
   outline-offset: -10px;
 }
 
