@@ -128,13 +128,6 @@ button, input, label {
     to   { transform: rotate(0deg) translateX(150px) rotate(0deg); }
 }
 
-#info-card {
-  background-color: #f8f8f8;
-  margin-top: 1em;
-  padding: 1em;
-  display: inline-block;
-}
-
 #info-card p {
   margin: 0;
 }

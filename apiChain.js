@@ -53,7 +53,9 @@ function checkGoogleVisionGuess(data) {
 // guess before a hyphen (-) character. The Google Vision API was
 // was putting record label info in, which was confusing the
 // Spotify API.
-
+// Then query spotify API using spotifyApiRequest.
+// It is a separate function because if the Spotify API returns 0
+// albums the app will ask it again with 1 fewer word.
 async function askSpotifyApi(spotifyToken, data) {
   const safeGuessArray = data.safeArray;
   let albumId = false;
@@ -77,7 +79,7 @@ async function askSpotifyApi(spotifyToken, data) {
   return data;
 }
 
-/
+// askSpotifyApi uses this funciton to actually query the API.
 async function spotifyApiRequest(spotifyToken, splitSafeGuessArray) {
   let safeGuess = splitSafeGuessArray.join(" ");
   let spotifyQueryOptions = spotify.queryOptions(spotifyToken, safeGuess);

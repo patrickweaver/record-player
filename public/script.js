@@ -1,17 +1,17 @@
+// This is called when the <input> file upload changes.
 function submitCoverFormOnChange() {
   var input = document.getElementById('album-cover-image');
   var file = input.files[0];
   submitCoverForm(file);
 }
 
-
-
+// This starts the logo animation and sends an async
+// request to the backend.
 function submitCoverForm(file) {
   //document.getElementById('cover-form').submit();
   document.getElementById('cover-form').style.display = "none";
   document.getElementById('spinner').style.display = "block";
 
-  console.log(file);
   var formData = new FormData();
   formData.append('file', file);
   formData.append('async', true);
@@ -29,6 +29,10 @@ function submitCoverForm(file) {
   });
 }
 
+// This is code to make the drag and drop work
+// Which I got from here:
+// https://css-tricks.com/drag-and-drop-file-uploading/
+// and is slightly modified.
 
 var isAdvancedUpload = function() {
   var div = document.createElement('div');
