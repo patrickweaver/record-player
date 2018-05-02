@@ -5,10 +5,12 @@ const googleVision = require('./googleVision');
 const spotify = require('./spotify');
 const censoredWords = require('./censoredWords');
 
-function askGoogleVision(data, imagePath) {
+
+// data is a variable that gets passed through the whole chain
+// imagePath is the url of the image on the server
+async function askGoogleVision(data, imagePath) {
   return new Promise(async function(resolve, reject) {
-    console.log("\nImage: " + projectUrl + imagePath);
-    let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
+    let gcpVisionOptions = await googleVision.getGcpOptions(projectUrl + imagePath);
     let gvGuess = await rp(gcpVisionOptions);
     if (gvGuess) {
       data.gvGuess = gvGuess;
@@ -19,16 +21,16 @@ function askGoogleVision(data, imagePath) {
   });
 }
 
+// Gets the "best guess" from the Google Vision response object
+// Splits the string into an array to check for words we want to remove
+// censoredWords.js has a list of words that should be removed (like 'cd')
 function checkGoogleVisionGuess(data) {
   const gvGuess = data.gvGuess;
-  console.log(JSON.stringify(gvGuess));
+  //console.log("Google Vision Guess: " + JSON.stringify(gvGuess));
   let guess = gvGuess.responses[0].webDetection.bestGuessLabels[0].label;
   data.gvBestGuess = guess;
-  console.log("guess: " + guess);
   let guessArray = guess.split(" ");
   let safeArray = []
-  console.log("guessArray: ");
-  console.log(guessArray);
   for (var i in guessArray) {
     let safe = true;
     if (censoredWords.censoredWords.indexOf(guessArray[i]) > -1) {
@@ -36,28 +38,22 @@ function checkGoogleVisionGuess(data) {
     }
     if (safe) {
       safeArray.push(guessArray[i]); 
-    } else {
-      // Need to add these to a DB
-      console.log("NOT SAFE");
-      console.log(guessArray[i]);
     }
   }
-  console.log('safeArray: ');
-  console.log(safeArray);
   data.safeArray = safeArray;
   return data;   
 }
 
 
-
-
+// Before asking spotify remove anything in the Google Vision
+// guess before a hyphen (-) character. The Google Vision API was
+// was putting record label info in, which was confusing the
+// Spotify API.
+// Then query spotify API using spotifyApiRequest.
+// It is a separate function because if the Spotify API returns 0
+// albums the app will ask it again with 1 fewer word.
 async function askSpotifyApi(spotifyToken, data) {
   const safeGuessArray = data.safeArray;
-  console.log("\nAsking Spotify");
-  console.log(spotifyToken);
-  console.log("");
-  // Change to iterative (recursive in function below);
-  //let albumId = spotifyApiRequest(spotifyToken, safeGuessArray);
   let albumId = false;
   let spotifyData = {};
   let splitSafeGuessArray = splitGuessAtHyphen(safeGuessArray);
@@ -67,7 +63,6 @@ async function askSpotifyApi(spotifyToken, data) {
       albumId = spotifyData.albums.items[0].id;
     }
     if (albumId) {
-      console.log('\nAlbum Id: ' + JSON.stringify(albumId));
       break;
     }
   }
@@ -80,17 +75,16 @@ async function askSpotifyApi(spotifyToken, data) {
   return data;
 }
 
+// askSpotifyApi uses this funciton to actually query the API.
 async function spotifyApiRequest(spotifyToken, splitSafeGuessArray) {
-  console.log("Asking with: " + splitSafeGuessArray);
   let safeGuess = splitSafeGuessArray.join(" ");
   let spotifyQueryOptions = spotify.queryOptions(spotifyToken, safeGuess);
   let spotifyData = await rp(spotifyQueryOptions);
-  console.log('\nSpotify Data:');
-  console.log(JSON.stringify(spotifyData));
   if (spotifyData.albums.items.length === 0) {
     console.log("No Items");
     return false;
   } else {
+    //console.log("Spotify Response :" + JSON.stringify(spotifyData));
     return spotifyData;
   }
 }
@@ -106,15 +100,13 @@ function splitGuessAtHyphen(safeGuessArray) {
     if (hyphenIndex > -1) {
       splitArray = safeGuessArray.slice(hyphenIndex + 1, safeGuessArray.length);
     }
-    console.log("Split Array:");
-    console.log(splitArray);
   }
   return splitArray;
 }
 
 
 function apiChain(imagePath, req, res) {
-  console.log("Image Path: " + imagePath);
+  //console.log("Image Path: " + imagePath);
   let data = {};
   
   return askGoogleVision(data, imagePath)

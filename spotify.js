@@ -19,8 +19,6 @@ function queryOptions(spotifyToken, safeGuess) {
   }
 }
 
-const stateString = 'abc123';
-
 function authQueryString(state) {
   return {
     client_id: SPOTIFY_CLIENT_ID,
@@ -72,12 +70,11 @@ function refreshOptions(refreshToken) {
   }
 }
 
-const embed = ['<iframe src="https://open.spotify.com/embed?uri=spotify:album:', '" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>'];
+const embed = ['<iframe src="https://open.spotify.com/embed?uri=spotify:album:', '" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>'];
 
 
 module.exports = {
   queryOptions: queryOptions,
-  stateString: stateString,
   authQueryString: authQueryString,
   authOptions: authOptions,
   setCookies: setCookies,
