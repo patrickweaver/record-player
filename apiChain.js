@@ -26,8 +26,9 @@ async function askGoogleVision(data, imagePath) {
 // censoredWords.js has a list of words that should be removed (like 'cd')
 function checkGoogleVisionGuess(data) {
   const gvGuess = data.gvGuess;
-  console.log("Google Vision Guess: " + JSON.stringify(gvGuess));
+  //console.log("Google Vision Guess: " + JSON.stringify(gvGuess));
   let guess = gvGuess.responses[0].webDetection.bestGuessLabels[0].label;
+  console.log("GV GUESS: " + guess);
   data.gvBestGuess = guess;
   let guessArray = guess.split(" ");
   let safeArray = []
