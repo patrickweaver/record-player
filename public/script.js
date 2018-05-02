@@ -24,7 +24,11 @@ function submitCoverForm(file) {
     processData: false,
     type: 'POST',
     success: function(data){
+      if (!data.error) {
         window.location.replace('player?albumId=' + data.albumId + '&googleVisionGuess=' + data.googleVisionGuess);
+      } else {
+        window.location.replace('error');
+      }
     }
   });
 }
