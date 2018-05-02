@@ -8,10 +8,9 @@ const censoredWords = require('./censoredWords');
 
 // data is a variable that gets passed through the whole chain
 // imagePath is the url of the image on the server
-function askGoogleVision(data, imagePath) {
+async function askGoogleVision(data, imagePath) {
   return new Promise(async function(resolve, reject) {
-    console.log("\nImage: " + projectUrl + imagePath);
-    let gcpVisionOptions = googleVision.getGcpOptions(projectUrl + imagePath);
+    let gcpVisionOptions = await googleVision.getGcpOptions(projectUrl + imagePath);
     let gvGuess = await rp(gcpVisionOptions);
     if (gvGuess) {
       data.gvGuess = gvGuess;
@@ -27,14 +26,11 @@ function askGoogleVision(data, imagePath) {
 // censoredWords.js has a list of words that should be removed (like 'cd')
 function checkGoogleVisionGuess(data) {
   const gvGuess = data.gvGuess;
-  console.log(JSON.stringify(gvGuess));
+  //console.log("Google Vision Guess: " + JSON.stringify(gvGuess));
   let guess = gvGuess.responses[0].webDetection.bestGuessLabels[0].label;
   data.gvBestGuess = guess;
-  console.log("guess: " + guess);
   let guessArray = guess.split(" ");
   let safeArray = []
-  console.log("guessArray: ");
-  console.log(guessArray);
   for (var i in guessArray) {
     let safe = true;
     if (censoredWords.censoredWords.indexOf(guessArray[i]) > -1) {
@@ -88,6 +84,7 @@ async function spotifyApiRequest(spotifyToken, splitSafeGuessArray) {
     console.log("No Items");
     return false;
   } else {
+    //console.log("Spotify Response :" + JSON.stringify(spotifyData));
     return spotifyData;
   }
 }
@@ -103,15 +100,13 @@ function splitGuessAtHyphen(safeGuessArray) {
     if (hyphenIndex > -1) {
       splitArray = safeGuessArray.slice(hyphenIndex + 1, safeGuessArray.length);
     }
-    console.log("Split Array:");
-    console.log(splitArray);
   }
   return splitArray;
 }
 
 
 function apiChain(imagePath, req, res) {
-  console.log("Image Path: " + imagePath);
+  //console.log("Image Path: " + imagePath);
   let data = {};
   
   return askGoogleVision(data, imagePath)

@@ -5,8 +5,12 @@ const b64req = require('request-promise-native').defaults({
 })
 
 async function getGcpOptions(imageUrl) {
-  console.log(imageUrl);
-  let imageData = await b64req({uri: imageUrl});
+  let imageData = await b64req({uri: imageUrl})
+  .catch(error => {
+    console.log("Error");
+    console.log(error);
+  });
+  
   return {
     method: 'POST',
     uri: gcpApiUrl + 'key=' + GCP_API_KEY,
@@ -15,11 +19,6 @@ async function getGcpOptions(imageUrl) {
         {
           "image":{
             content: imageData
-            /*
-            "source": {
-              "imageUri": imageUrl
-            }
-            */
           },
           "features":[
             {
