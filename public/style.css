@@ -56,8 +56,6 @@ button, input, label {
 
 #demo-video {
   margin: 1em 0 0;
-  padding: 0;
-  border: 3px solid blue;
   max-width: 300px;
 }
 
