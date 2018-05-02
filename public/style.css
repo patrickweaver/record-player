@@ -12,6 +12,7 @@ body {
   text-align: center;
   background: url(https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fmusic-pattern.png?1525139512471);
   background-size: 200px;
+  padding-bottom: 2em;
 }
 
 a {
@@ -29,12 +30,15 @@ button, input, label {
   background-color: #f8f8f8;
   border-radius: 3px;
   padding: 1em;
-  margin-top: 1em;
+  margin: 1em 10px 0;
   display: inline-block;
+  line-height: 130%;
+  font-size: 110%;
 }
 
 #site-title h1 {
   margin: 0;
+  line-height: 110%;
 }
 
 #site-title a {

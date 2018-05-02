@@ -5,6 +5,7 @@ app.use(cookieParser());
 const hbs = require("hbs");
 app.set("view engine", "hbs");
 app.set("views", "views");
+hbs.registerPartials(__dirname + '/views/partials/');
 
 
 var multer  = require('multer');
@@ -18,6 +19,8 @@ const uuidv4 = require('uuid/v4');
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const apiChain = require('./apiChain');
 const spotify = require('./spotify');
+
+
 
 /* Routes */
 
