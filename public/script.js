@@ -64,6 +64,10 @@ if (isAdvancedUpload) {
   .on('drop', function(e) {
     droppedFiles = e.originalEvent.dataTransfer.files;
     console.log("DROP!");
-    submitCoverForm(droppedFiles[0]);
+    if (!droppedFiles[0]) {
+      alert("Pleas drop a file, not an image");
+    } else {
+      submitCoverForm(droppedFiles[0]);
+    }
   });
 }

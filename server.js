@@ -91,7 +91,15 @@ app.get('/', (req, res) => {
 // At the end the image is deleted from the server
 app.post('/player', upload.single('file'), async function(req, res) {
   let imagePath = '/images/' + req.file.filename;
-  let apiResponse = await apiChain(imagePath, req, res);
+  let apiResponse;
+  try {
+    apiResponse = await apiChain(imagePath, req, res);
+  } catch(e) {
+    apiResponse = {
+      error: true,
+      errorMessage: "Ap
+  }
+  
   if (!apiResponse.error) {
     if (req.body.async) {
       res.json({
