@@ -90,8 +90,28 @@ app.get('/', (req, res) => {
 // or as a form submittion if the fancy uploader doesn't work (no js).
 // At the end the image is deleted from the server
 app.post('/player', upload.single('file'), async function(req, res) {
-  let imagePath = '/images/' + req.file.filename;
-  let apiResponse = await apiChain(imagePath, req, res);
+  var apiResponse;
+  var imagePath = false;
+  if (req.file && req.file.filename) {
+    imagePath = '/images/' + req.file.filename;
+  } else {
+    apiResponse = {
+      error: true,
+      errorMessage: "No image file."
+    }
+  }
+  
+  if (imagePath) {
+    try {
+      apiResponse = await apiChain(imagePath, req, res);
+    } catch(e) {
+      apiResponse = {
+        error: true,
+        errorMessage: "API requests failed."
+      }
+    }
+  }
+  
   if (!apiResponse.error) {
     if (req.body.async) {
       res.json({
@@ -115,10 +135,12 @@ app.post('/player', upload.single('file'), async function(req, res) {
       handleError(res, "Error: " + apiResponse.errorMessage);
     }
   }
-  try {
-    fs.unlinkSync('/app/public' + imagePath);
-  } catch (err) {
-    console.log('error deleting ' + imagePath + ': ' + err);
+  if (imagePath) {
+    try {
+      fs.unlinkSync('/app/public' + imagePath);
+    } catch (err) {
+      console.log('error deleting ' + imagePath + ': ' + err);
+    }
   }
 });
 

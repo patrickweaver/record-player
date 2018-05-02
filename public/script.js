@@ -24,7 +24,11 @@ function submitCoverForm(file) {
     processData: false,
     type: 'POST',
     success: function(data){
+      if (!data.error) {
         window.location.replace('player?albumId=' + data.albumId + '&googleVisionGuess=' + data.googleVisionGuess);
+      } else {
+        window.location.replace('error');
+      }
     }
   });
 }
@@ -64,6 +68,10 @@ if (isAdvancedUpload) {
   .on('drop', function(e) {
     droppedFiles = e.originalEvent.dataTransfer.files;
     console.log("DROP!");
-    submitCoverForm(droppedFiles[0]);
+    if (!droppedFiles[0]) {
+      alert("Pleas drop a file, not an image");
+    } else {
+      submitCoverForm(droppedFiles[0]);
+    }
   });
 }

@@ -137,7 +137,7 @@ button, input, label {
     to   { transform: rotate(0deg) translateX(150px) rotate(0deg); }
 }
 
-#info-card p {
+#gv-card p {
   margin: 0;
 }
 
