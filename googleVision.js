@@ -1,8 +1,12 @@
 const gcpApiUrl = 'https://vision.googleapis.com/v1/images:annotate?'
 const GCP_API_KEY = process.env.GCP_API_KEY;
+const b64req = require('request-promise-native').defaults({
+  encoding: 'base64'
+})
 
-function getGcpOptions(imageUrl) {
+async function getGcpOptions(imageUrl) {
   console.log(imageUrl);
+  let imageData = await b64req({uri: imageUrl});
   return {
     method: 'POST',
     uri: gcpApiUrl + 'key=' + GCP_API_KEY,
@@ -10,9 +14,12 @@ function getGcpOptions(imageUrl) {
       "requests":[
         {
           "image":{
+            content: imageData
+            /*
             "source": {
               "imageUri": imageUrl
             }
+            */
           },
           "features":[
             {
