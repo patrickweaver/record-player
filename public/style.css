@@ -7,9 +7,16 @@ body {
   line-height: 125%;
   font-family: sans-serif;
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
   text-align: center;
+  background: url(https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fmusic-pattern.png?1525139512471);
+  background-size: 200px;
+  padding-bottom: 2em;
+}
+
+a {
+  color: #333;
 }
 
 button, input, label {
@@ -19,12 +26,55 @@ button, input, label {
   margin: 1.5em 0;
 }
 
-#cover-form {
-  padding: 1em 10px;
+.card {
+  background-color: #f8f8f8;
+  border-radius: 3px;
+  padding: 1em;
+  margin: 1em 10px 0;
+  display: inline-block;
+  line-height: 130%;
+  font-size: 110%;
 }
 
-#album-cover-image {
-  display: none;
+#site-title h1 {
+  margin: 0;
+  line-height: 110%;
+}
+
+#site-title a {
+  text-decoration: none;
+  color: black;
+}
+
+#explanation {
+  text-align: justify;
+}
+
+#spotify-login-button {
+  padding: 1.5em 1em;
+}
+
+#demo-video {
+  margin: 1em 0 0;
+  max-width: 300px;
+}
+
+#camera-label {
+  cursor: pointer;
+}
+
+#camera-image {
+  width: 50px;
+}
+
+#camera-label-text {
+  width: 100%;
+  display: block;
+}
+
+#cover-form {
+  margin-top: 1em;
+  padding: 1em;
 }
 
 .box__dragndrop,
@@ -35,8 +85,9 @@ button, input, label {
 }
 
 #cover-form.has-advanced-upload {
-  background-color: white;
-  outline: 2px dashed black;
+  background-color: #f8f8f8;
+  border-radius: 5px;
+  outline: 5px dotted black;
   outline-offset: -10px;
 }
 
@@ -45,7 +96,7 @@ button, input, label {
 }
 
 #cover-form.is-dragover {
-  background-color: grey;
+  background-color: #e9d1f9;
 }
 
 #spotify-auth-button {
@@ -85,3 +136,18 @@ button, input, label {
     from { transform: rotate(-360deg) translateX(150px) rotate(360deg); }
     to   { transform: rotate(0deg) translateX(150px) rotate(0deg); }
 }
+
+#info-card p {
+  margin: 0;
+}
+
+#spotify-embed {
+  margin-top: 1em;
+  padding: .5em;
+  border-radius: 3px;
+  background-color: #f8f8f8;
+  display: inline-block;
+}
+
+
+/* Most of the emojis in the background from Emoji one */
