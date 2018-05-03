@@ -30,6 +30,12 @@ function checkGoogleVisionGuess(data) {
   let guess = gvGuess.responses[0].webDetection.bestGuessLabels[0].label;
   console.log("GV GUESS: " + guess);
   data.gvBestGuess = guess;
+
+  if (!guess) {
+    throw('No guess from google ¯\_(ツ)_/¯ ');
+    return;
+  }
+  
   let guessArray = guess.split(" ");
   let safeArray = []
   for (var i in guessArray) {
