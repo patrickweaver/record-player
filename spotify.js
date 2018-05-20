@@ -70,7 +70,7 @@ function refreshOptions(refreshToken) {
   }
 }
 
-const embed = ['<iframe id="spotify-embed" src="https://open.spotify.com/embed?uri=spotify:album:', '" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>'];
+const embed = ['<iframe id="spotify-embed-iframe" src="https://open.spotify.com/embed?uri=spotify:album:', '" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>'];
 
 
 module.exports = {
