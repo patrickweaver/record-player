@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var app = express();
@@ -28,7 +29,7 @@ app.use(express.static('public'));
 
 // Explains the app and has Spotify login link
 app.get('/auth', (req, res) => {
-  let stateRandString = uuidv4();
+  let stateRandString = process.env.SPOTIFY_STATE_STRING;
   res.cookie('spotifyStateString', stateRandString);
   let query = spotify.authQueryString(stateRandString);
   res.render('auth', {
@@ -48,7 +49,10 @@ app.get('/auth-callback', (req, res) => {
       spotify.setCookies(res, data);
       res.redirect('/');
     })
-    .catch(err => handleError(res, err));
+    .catch(err => {
+      console.log(err);
+      handleError(res, err);
+    });
   } else {
    handleError(res, "Wrong spotify auth code");     
   }
@@ -89,31 +93,22 @@ app.get('/', (req, res) => {
 // This route works for both the async request from the frontend
 // or as a form submittion if the fancy uploader doesn't work (no js).
 // At the end the image is deleted from the server
-app.post('/player', upload.single('file'), async function(req, res) {
+app.get('/player', async function(req, res) {
   var apiResponse;
   var imagePath = false;
-  if (req.file && req.file.filename) {
-    imagePath = '/images/' + req.file.filename;
-  } else {
+  imagePath = '/images/image.jpg';
+  
+  try {
+    apiResponse = await apiChain(imagePath, req, res);
+  } catch(e) {
     apiResponse = {
       error: true,
-      errorMessage: "No image file."
-    }
-  }
-  
-  if (imagePath) {
-    try {
-      apiResponse = await apiChain(imagePath, req, res);
-    } catch(e) {
-      apiResponse = {
-        error: true,
-        errorMessage: "API requests failed."
-      }
+      errorMessage: "API requests failed."
     }
   }
   
   if (!apiResponse.error) {
-    if (req.body.async) {
+    if (false) {
       res.json({
         error: false,
         googleVisionGuess: apiResponse.gvBestGuess,
@@ -126,20 +121,13 @@ app.post('/player', upload.single('file'), async function(req, res) {
       });
     }
   } else {
-    if (req.body.async) {
+    if (false) {
       res.json({
         error: true,
         errorMessage: apiResponse.errorMessage
       });
     } else {
       handleError(res, "Error: " + apiResponse.errorMessage);
-    }
-  }
-  if (imagePath) {
-    try {
-      fs.unlinkSync('/app/public' + imagePath);
-    } catch (err) {
-      console.log('error deleting ' + imagePath + ': ' + err);
     }
   }
 });

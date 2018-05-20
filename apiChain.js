@@ -1,6 +1,6 @@
 var rp = require('request-promise-native');
 
-const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
+const projectUrl = 'http://localhost:' + process.env.PORT;
 const googleVision = require('./googleVision');
 const spotify = require('./spotify');
 const censoredWords = require('./censoredWords');

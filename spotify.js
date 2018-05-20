@@ -6,7 +6,7 @@ const spotifyApiUrl = 'https://api.spotify.com/v1/';
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const redirectPath = '/auth-callback';
-const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
+const SPOTIFY_REDIRECT_URI = 'http://localhost:3000' + redirectPath;
 
 function queryOptions(spotifyToken, safeGuess) {
   return {
