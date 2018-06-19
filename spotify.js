@@ -31,7 +31,7 @@ function apiOptions(spotifyToken) {
 }
 
 function apiPlaybackOptions(spotifyToken, albumId, deviceId) {
-  return {
+  var options = {
     method: 'PUT',
     uri: spotifyApiUrl + 'me/player/play' + '?device_id=' + deviceId,
     json: true,
@@ -42,6 +42,9 @@ function apiPlaybackOptions(spotifyToken, albumId, deviceId) {
       context_uri: 'spotify:album:' + albumId
     }
   }
+  console.log(JSON.stringify(options));
+
+  return options;
 }
 
 
