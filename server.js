@@ -135,6 +135,8 @@ app.get('/player', async function(req, res) {
           console.log(playback);
           if (playback.StatusCodeError) {
             console.log("**** Playback error");
+          } else {
+            console.log("*%*%*%*% NO ERROR");
           }
           res.send(playback.status);
 
