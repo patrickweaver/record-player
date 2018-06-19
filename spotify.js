@@ -19,7 +19,7 @@ function queryOptions(spotifyToken, safeGuess) {
   }
 }
 
-async function apiOptions(spotifyToken) {
+function apiOptions(spotifyToken) {
   return {
     method: 'GET',
     uri: spotifyApiUrl + 'me/player/devices',
@@ -30,7 +30,7 @@ async function apiOptions(spotifyToken) {
   }
 }
 
-async function apiPlaybackOptions(spotifyToken, albumId, deviceId) {
+function apiPlaybackOptions(spotifyToken, albumId, deviceId) {
   return {
     method: 'PUT',
     uri: spotifyApiUrl + 'me/player/play' + '?device_id=' + deviceId,

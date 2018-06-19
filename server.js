@@ -122,14 +122,24 @@ app.get('/player', async function(req, res) {
       });
       */
       //res.redirect('http://open.spotify.com/album/' + apiResponse.albumId);
-      let devices = await rp(spotify.apiOptions(req.cookies.spotifyAccessToken));
+      try {
+        let devices = await rp(spotify.apiOptions(req.cookies.spotifyAccessToken));
+      } catch(err) {
+        console.log("Spotify Devices Request Error:");
+        console.log(err);
+      }
       console.log("Devices:");
       console.log(devices);
       if (devices) {
         deviceId = devices.devices[0].id;
       }
       //res.send(devices);
-      let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId, deviceId));
+      try {
+        let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId, deviceId));
+      } catch(err) {
+        console.log("Spotify Playback Request Error:");
+        console.log(err);
+      }
       console.log("Playback:");
       console.log(playback);
       res.send(playback);
@@ -149,6 +159,7 @@ app.get('/player', async function(req, res) {
 
 // Once the async apiChain request returns, frontend redirects to player
 // with Spotify album ID as query string parameter
+/*
 app.get('/player', function(req,res) {
   if (req.query.albumId && req.query.googleVisionGuess) {
     res.render('player', {
@@ -159,6 +170,7 @@ app.get('/player', function(req,res) {
     res.redirect('/');
   }
 });
+*/
 
 // General error handling
 function handleError(res, err) {
