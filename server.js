@@ -126,24 +126,30 @@ app.get('/player', async function(req, res) {
         let devices = await rp(spotify.apiOptions(req.cookies.spotifyAccessToken));
         console.log("Devices:");
         console.log(devices);
+        if (devices) {
+          deviceId = devices.devices[0].id;
+        }
+        try {
+          let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId, deviceId));
+          console.log("Playback:");
+          console.log(playback);
+          res.send(playback);
+          
+        } catch(err) {
+          console.log("Spotify Playback Request Error:");
+          console.log(err);
+          res.send("Playback Request Error");
+        }
+
       } catch(err) {
         console.log("Spotify Devices Request Error:");
         console.log(err);
+        res.send("Devices Request Error");
       }
 
-      if (devices) {
-        deviceId = devices.devices[0].id;
-      }
+
       //res.send(devices);
-      try {
-        let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId, deviceId));
-      } catch(err) {
-        console.log("Spotify Playback Request Error:");
-        console.log(err);
-      }
-      console.log("Playback:");
-      console.log(playback);
-      res.send(playback);
+
 
     }
   } else {
