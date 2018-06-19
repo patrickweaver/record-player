@@ -35,20 +35,20 @@ function checkGoogleVisionGuess(data) {
     throw('No guess from google ¯\_(ツ)_/¯ ');
     return;
   }
-  
+
   let guessArray = guess.split(" ");
   let safeArray = []
   for (var i in guessArray) {
     let safe = true;
     if (censoredWords.censoredWords.indexOf(guessArray[i]) > -1) {
-      safe = false; 
+      safe = false;
     }
     if (safe) {
-      safeArray.push(guessArray[i]); 
+      safeArray.push(guessArray[i]);
     }
   }
   data.safeArray = safeArray;
-  return data;   
+  return data;
 }
 
 
@@ -68,12 +68,14 @@ async function askSpotifyApi(spotifyToken, data) {
     spotifyData = await spotifyApiRequest(spotifyToken, splitSafeGuessArray.slice(0, i));
     if (spotifyData.albums && spotifyData.albums.items && spotifyData.albums.items[0]) {
       albumId = spotifyData.albums.items[0].id;
+      console.log("Album Found!");
+      console.log(albumId);
     }
     if (albumId) {
       break;
     }
   }
-  
+
   if (!albumId) {
     console.log('Spotify Error -- Out of words to guess');
     throw('No items: ' + splitSafeGuessArray + '(' + safeGuessArray + ')');
@@ -103,7 +105,7 @@ async function spotifyApiRequest(spotifyToken, splitSafeGuessArray) {
 function splitGuessAtHyphen(safeGuessArray) {
   let splitArray = safeGuessArray;
   if (safeGuessArray.length > 0) {
-    let hyphenIndex = safeGuessArray.indexOf('-');  
+    let hyphenIndex = safeGuessArray.indexOf('-');
     if (hyphenIndex > -1) {
       splitArray = safeGuessArray.slice(hyphenIndex + 1, safeGuessArray.length);
     }
@@ -115,7 +117,7 @@ function splitGuessAtHyphen(safeGuessArray) {
 function apiChain(imagePath, req, res) {
   //console.log("Image Path: " + imagePath);
   let data = {};
-  
+
   return askGoogleVision(data, imagePath)
   .then(checkGoogleVisionGuess)
   .then(askSpotifyApi.bind(null, req.cookies.spotifyAccessToken))

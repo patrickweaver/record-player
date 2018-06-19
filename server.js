@@ -42,7 +42,7 @@ app.get('/auth', (req, res) => {
 app.get('/auth-callback', (req, res) => {
   if (req.query.state === req.cookies.spotifyStateString && !req.query.error) {
     var code = req.query.code;
-    
+
     const spotifyAuthOptions = spotify.authOptions(code);
     rp(spotifyAuthOptions)
     .then(data => {
@@ -54,7 +54,7 @@ app.get('/auth-callback', (req, res) => {
       handleError(res, err);
     });
   } else {
-   handleError(res, "Wrong spotify auth code");     
+   handleError(res, "Wrong spotify auth code");
   }
 });
 
@@ -97,7 +97,7 @@ app.get('/player', async function(req, res) {
   var apiResponse;
   var imagePath = false;
   imagePath = '/images/image.jpg';
-  
+
   try {
     apiResponse = await apiChain(imagePath, req, res);
   } catch(e) {
@@ -106,7 +106,7 @@ app.get('/player', async function(req, res) {
       errorMessage: "API requests failed."
     }
   }
-  
+
   if (!apiResponse.error) {
     if (false) {
       res.json({
@@ -115,16 +115,20 @@ app.get('/player', async function(req, res) {
         albumId: apiResponse.albumId
       });
     } else {
-      /*	    
+      /*
       res.render('player', {
         googleVisionGuess: apiResponse.gvBestGuess,
-        embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1] 
+        embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1]
       });
       */
       //res.redirect('http://open.spotify.com/album/' + apiResponse.albumId);
       let devices = await rp(spotify.apiOptions(req.cookies.spotifyAccessToken));
+      console.log("Devices:");
+      console.log(devices);
       //res.send(devices);
       let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId));
+      console.log("Playback:");
+      console.log(playback);
       res.send(playback);
 
     }
@@ -146,7 +150,7 @@ app.get('/player', function(req,res) {
   if (req.query.albumId && req.query.googleVisionGuess) {
     res.render('player', {
       googleVisionGuess: req.query.googleVisionGuess,
-      embed: spotify.embed[0] + req.query.albumId + spotify.embed[1] 
+      embed: spotify.embed[0] + req.query.albumId + spotify.embed[1]
     })
   } else {
     res.redirect('/');
