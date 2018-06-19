@@ -19,12 +19,39 @@ function queryOptions(spotifyToken, safeGuess) {
   }
 }
 
+function apiOptions(spotifyToken) {
+  return {
+    method: 'GET',
+    uri: spotifyApiUrl + 'me/player/devices',
+    json: true,
+    auth: {
+      'bearer': spotifyToken
+    }
+  }
+}
+
+function apiPlaybackOptions(spotifyToken, albumId) {
+  return {
+    method: 'PUT',
+    uri: spotifyApiUrl + 'me/player/play' + '?device_id=' + '98bb0735e28656bac098d927d410c3138a4b5bca',
+    json: true,
+    auth: {
+      'bearer': spotifyToken
+    },
+    body: {
+      context_uri: 'spotify:album:' + albumId
+    }
+  }
+}
+
+
 function authQueryString(state) {
   return {
     client_id: SPOTIFY_CLIENT_ID,
     response_type: "code",
     redirect_uri: SPOTIFY_REDIRECT_URI,
     state: state,
+    scope: 'user-modify-playback-state user-read-playback-state streaming',
     show_dialog: false
   }
 }
@@ -76,6 +103,8 @@ const embed = ['<iframe src="https://open.spotify.com/embed?uri=spotify:album:',
 module.exports = {
   queryOptions: queryOptions,
   authQueryString: authQueryString,
+  apiPlaybackOptions: apiPlaybackOptions,
+  apiOptions: apiOptions,
   authOptions: authOptions,
   setCookies: setCookies,
   refreshOptions: refreshOptions,

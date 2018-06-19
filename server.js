@@ -115,10 +115,18 @@ app.get('/player', async function(req, res) {
         albumId: apiResponse.albumId
       });
     } else {
+      /*	    
       res.render('player', {
         googleVisionGuess: apiResponse.gvBestGuess,
         embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1] 
       });
+      */
+      //res.redirect('http://open.spotify.com/album/' + apiResponse.albumId);
+      let devices = await rp(spotify.apiOptions(req.cookies.spotifyAccessToken));
+      //res.send(devices);
+      let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId));
+      res.send(playback);
+
     }
   } else {
     if (false) {
