@@ -125,8 +125,11 @@ app.get('/player', async function(req, res) {
       let devices = await rp(spotify.apiOptions(req.cookies.spotifyAccessToken));
       console.log("Devices:");
       console.log(devices);
+      if (devices) {
+        deviceId = devices.devices[0].id;
+      }
       //res.send(devices);
-      let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId));
+      let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId, deviceId));
       console.log("Playback:");
       console.log(playback);
       res.send(playback);

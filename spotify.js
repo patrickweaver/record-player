@@ -30,10 +30,10 @@ function apiOptions(spotifyToken) {
   }
 }
 
-function apiPlaybackOptions(spotifyToken, albumId) {
+function apiPlaybackOptions(spotifyToken, albumId, deviceId) {
   return {
     method: 'PUT',
-    uri: spotifyApiUrl + 'me/player/play' + '?device_id=' + '98bb0735e28656bac098d927d410c3138a4b5bca',
+    uri: spotifyApiUrl + 'me/player/play' + '?device_id=' + deviceId,
     json: true,
     auth: {
       'bearer': spotifyToken
@@ -68,7 +68,7 @@ function authOptions(code) {
       client_secret: SPOTIFY_CLIENT_SECRET,
     },
     json: true
-  } 
+  }
 }
 
 function setCookies(res, data) {
@@ -110,7 +110,3 @@ module.exports = {
   refreshOptions: refreshOptions,
   embed: embed
 }
-
-
-
-
