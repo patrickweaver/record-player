@@ -124,12 +124,13 @@ app.get('/player', async function(req, res) {
       //res.redirect('http://open.spotify.com/album/' + apiResponse.albumId);
       try {
         let devices = await rp(spotify.apiOptions(req.cookies.spotifyAccessToken));
+        console.log("Devices:");
+        console.log(devices);
       } catch(err) {
         console.log("Spotify Devices Request Error:");
         console.log(err);
       }
-      console.log("Devices:");
-      console.log(devices);
+
       if (devices) {
         deviceId = devices.devices[0].id;
       }
