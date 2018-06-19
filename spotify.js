@@ -39,7 +39,7 @@ function apiPlaybackOptions(spotifyToken, albumId, deviceId) {
       'bearer': spotifyToken
     },
     body: {
-      context_uri: 'spotify:album:zzzzz' + albumId
+      context_uri: 'spotify:album:' + albumId
     }
   }
   //console.log(JSON.stringify(options));
