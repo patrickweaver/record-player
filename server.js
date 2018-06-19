@@ -132,6 +132,7 @@ app.get('/player', async function(req, res) {
         try {
           let playback = await rp(spotify.apiPlaybackOptions(req.cookies.spotifyAccessToken, apiResponse.albumId, deviceId));
           console.log("Playback:");
+          console.log(playback);
           console.log(playback.status);
           res.send(playback.status);
 
