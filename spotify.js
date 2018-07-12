@@ -11,7 +11,7 @@ const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
 function queryOptions(spotifyToken, safeGuess) {
   return {
     method: 'GET',
-    uri: spotifyApiUrl + 'search?q=' + safeGuess + '&type=Album',
+    uri: spotifyApiUrl + 'search?q=' + safeGuess + '&type=album',
     json: true,
     auth: {
         'bearer': spotifyToken
