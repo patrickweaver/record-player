@@ -28,7 +28,7 @@ app.use(express.static('public'));
 
 // Explains the app and has Spotify login link
 app.get('/auth', (req, res) => {
-  let stateRandString = uuidv4();
+  let stateRandString = process.env.SPOTIFY_STATE_STRING;
   res.cookie('spotifyStateString', stateRandString);
   let query = spotify.authQueryString(stateRandString);
   res.render('auth', {
