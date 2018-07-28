@@ -11,7 +11,7 @@ const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
 function queryOptions(spotifyToken, safeGuess) {
   return {
     method: 'GET',
-    uri: spotifyApiUrl + 'search?q=' + safeGuess + '&type=Album',
+    uri: spotifyApiUrl + 'search?q=' + safeGuess + '&type=album',
     json: true,
     auth: {
         'bearer': spotifyToken
@@ -70,7 +70,7 @@ function refreshOptions(refreshToken) {
   }
 }
 
-const embed = ['<iframe src="https://open.spotify.com/embed?uri=spotify:album:', '" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>'];
+const embed = ['<iframe id="spotify-embed-iframe" src="https://open.spotify.com/embed?uri=spotify:album:', '" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>'];
 
 
 module.exports = {
