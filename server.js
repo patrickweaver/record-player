@@ -33,7 +33,8 @@ app.get('/auth', (req, res) => {
   let query = spotify.authQueryString(stateRandString);
   res.render('auth', {
     authUrl: "https://accounts.spotify.com/authorize?" + querystring.stringify(query),
-    loggedOut: true
+    loggedOut: true,
+    analyticsUrl: process.env.ANALYTICS_URL
   });
 });
 
@@ -83,7 +84,9 @@ app.use(function(req, res, next) {
 
 // Camera is default view, unless not logged in
 app.get('/', (req, res) => {
-  res.render('camera', {});
+  res.render('camera', {
+    analyticsUrl: process.env.ANALYTICS_URL
+  });
 });
 
 // This route works for both the async request from the frontend
@@ -122,7 +125,8 @@ app.post('/player', upload.single('file'), async function(req, res) {
     } else {
       res.render('player', {
         googleVisionGuess: apiResponse.gvBestGuess,
-        embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1] 
+        embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1],
+        analyticsUrl: process.env.ANALYTICS_URL
       });
     }
   } else {
@@ -150,7 +154,8 @@ app.get('/player', function(req,res) {
   if (req.query.albumId && req.query.googleVisionGuess) {
     res.render('player', {
       googleVisionGuess: req.query.googleVisionGuess,
-      embed: spotify.embed[0] + req.query.albumId + spotify.embed[1] 
+      embed: spotify.embed[0] + req.query.albumId + spotify.embed[1],
+      analyticsUrl: process.env.ANALYTICS_URL
     })
   } else {
     res.redirect('/');
@@ -165,7 +170,9 @@ function handleError(res, err) {
 }
 
 app.get('/error', function(req, res) {
-  res.render('error', {});
+  res.render('error', {
+    analyticsUrl: process.env.ANALYTICS_URL
+  });
 });
 
 var listener = app.listen(process.env.PORT, function () {
