@@ -21,7 +21,6 @@ const apiChain = require('./apiChain');
 const spotify = require('./spotify');
 
 
-
 /* Routes */
 
 app.use(express.static('public'));
