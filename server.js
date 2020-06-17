@@ -10,7 +10,7 @@ hbs.registerPartials(__dirname + '/views/partials/');
 
 var multer  = require('multer');
 var upload = multer({ dest: __dirname + '/public/images/' });
-var rp = require('request-promise-native');
+var rp = require('request-promise');
 const querystring = require('querystring');
 const url = require('url');
 const fs = require('fs');
@@ -19,7 +19,6 @@ const uuidv4 = require('uuid/v4');
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const apiChain = require('./apiChain');
 const spotify = require('./spotify');
-
 
 
 /* Routes */
