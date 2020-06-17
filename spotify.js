@@ -1,4 +1,4 @@
-var rp = require('request-promise-native');
+var rp = require('request-promise');
 
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 
