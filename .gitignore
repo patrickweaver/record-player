@@ -61,3 +61,4 @@ typings/
 .next
 
 public/images/*
+!public/images/images.txt
