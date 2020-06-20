@@ -1,6 +1,6 @@
 var rp = require('request-promise');
 
-const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
+const projectUrl = process.env.PROJECT_URL;
 
 const spotifyApiUrl = 'https://api.spotify.com/v1/';
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
