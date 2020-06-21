@@ -1,6 +1,7 @@
 dependencies:
   body-parser: 1.19.0
   cookie-parser: 1.4.5
+  dotenv: 8.2.0
   express: 4.17.1
   hbs: 4.1.1
   multer: 1.4.2
@@ -116,11 +117,6 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
-  /commander/2.20.3:
-    dev: false
-    optional: true
-    resolution:
-      integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
   /concat-stream/1.6.2:
     dependencies:
       buffer-from: 1.1.1
@@ -208,6 +204,12 @@ packages:
       node: '>=0.8.0'
     resolution:
       integrity: sha1-WZbAhrszIYyBLAkL3cCc0S+stw8=
+  /dotenv/8.2.0:
+    dev: false
+    engines:
+      node: '>=8'
+    resolution:
+      integrity: sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
   /ecc-jsbn/0.1.2:
     dependencies:
       jsbn: 0.1.1
@@ -357,7 +359,7 @@ packages:
       node: '>=0.4.7'
     hasBin: true
     optionalDependencies:
-      uglify-js: 3.9.4
+      uglify-js: 3.10.0
     resolution:
       integrity: sha512-1f2BACcBfiwAfStCKZNrUCgqNZkGsAT7UM3kkYtXuLo0KnaVfjKOyf7PRzB6++aK9STyT1Pd2ZCPe3EGOXleXA==
   /har-schema/2.0.0:
@@ -862,16 +864,14 @@ packages:
     dev: false
     resolution:
       integrity: sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
-  /uglify-js/3.9.4:
-    dependencies:
-      commander: 2.20.3
+  /uglify-js/3.10.0:
     dev: false
     engines:
       node: '>=0.8.0'
     hasBin: true
     optional: true
     resolution:
-      integrity: sha512-8RZBJq5smLOa7KslsNsVcSH+KOXf1uDU8yqLeNuVKwmT0T3FA0ZoXlinQfRad7SDcbZZRZE4ov+2v71EnxNyCA==
+      integrity: sha512-Esj5HG5WAyrLIdYU74Z3JdG2PxdIusvj6IWHMtlyESxc7kcDz7zYlYjpnSokn1UbpV0d/QX9fan7gkCNd/9BQA==
   /unpipe/1.0.0:
     dev: false
     engines:
@@ -937,6 +937,7 @@ shrinkwrapVersion: 3
 specifiers:
   body-parser: ^1.18.2
   cookie-parser: ^1.4.3
+  dotenv: ^8.2.0
   express: ^4.16.3
   hbs: ^4.0.1
   multer: ^1.3.0
