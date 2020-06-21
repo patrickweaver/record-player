@@ -1,4 +1,4 @@
-var rp = require('request-promise-native');
+var rp = require('request-promise');
 
 const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
 const googleVision = require('./googleVision');
@@ -10,7 +10,7 @@ const censoredWords = require('./censoredWords');
 // imagePath is the url of the image on the server
 async function askGoogleVision(data, imagePath) {
   return new Promise(async function(resolve, reject) {
-    let gcpVisionOptions = await googleVision.getGcpOptions(projectUrl + imagePath);
+    let gcpVisionOptions = await googleVision.getGcpOptions('./public' + imagePath);
     let gvGuess = await rp(gcpVisionOptions);
     if (gvGuess) {
       data.gvGuess = gvGuess;

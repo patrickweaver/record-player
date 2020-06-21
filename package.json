@@ -4,16 +4,17 @@
   "description": "A computer vision enabled record player",
   "main": "server.js",
   "scripts": {
-    "start": "rm -r /app/public/images && mkdir /app/public/images && node server.js"
+    "start": "rm -r ./public/images && mkdir ./public/images && node -r dotenv/config server.js"
   },
   "dependencies": {
-    "express": "^4.16.3",
-    "multer": "^1.3.0",
     "body-parser": "^1.18.2",
-    "request-promise-native": "^1.0.5",
-    "request": "^2.85.0",
-    "hbs": "^4.0.1",
     "cookie-parser": "^1.4.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.16.3",
+    "hbs": "^4.0.1",
+    "multer": "^1.3.0",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.5",
     "uuid": "^3.2.1"
   },
   "engines": {
