@@ -60,4 +60,5 @@ typings/
 # next.js build output
 .next
 
-public/images/
+public/images/*
+!public/images/images.txt
