@@ -1,41 +1,77 @@
-// client-side js, loaded by index.html
-// run by the browser each time the page is loaded
-
-console.log("hello world :o");
-
-// define variables that reference elements on our page
-const dreamsList = document.getElementById("dreams");
-const dreamsForm = document.querySelector("form");
-
-// a helper function that creates a list item for a given dream
-function appendNewDream(dream) {
-  const newListItem = document.createElement("li");
-  newListItem.innerText = dream;
-  dreamsList.appendChild(newListItem);
+// This is called when the <input> file upload changes.
+function submitCoverFormOnChange() {
+  var input = document.getElementById('album-cover-image');
+  var file = input.files[0];
+  submitCoverForm(file);
 }
 
-// fetch the initial list of dreams
-fetch("/dreams")
-  .then(response => response.json()) // parse the JSON from the server
-  .then(dreams => {
-    // remove the loading text
-    dreamsList.firstElementChild.remove();
-  
-    // iterate through every dream and add it to our page
-    dreams.forEach(appendNewDream);
-  
-    // listen for the form to be submitted and add a new dream when it is
-    dreamsForm.addEventListener("submit", event => {
-      // stop our form submission from refreshing the page
-      event.preventDefault();
+// This starts the logo animation and sends an async
+// request to the backend.
+function submitCoverForm(file) {
+  //document.getElementById('cover-form').submit();
+  document.getElementById('cover-form').style.display = "none";
+  document.getElementById('spinner').style.display = "block";
 
-      // get dream value and add it to the list
-      let newDream = dreamsForm.elements.dream.value;
-      dreams.push(newDream);
-      appendNewDream(newDream);
+  var formData = new FormData();
+  formData.append('file', file);
+  formData.append('async', true);
 
-      // reset form
-      dreamsForm.reset();
-      dreamsForm.elements.dream.focus();
-    });
+  jQuery.ajax({
+    url: 'player',
+    data: formData,
+    cache: false,
+    contentType: false,
+    processData: false,
+    type: 'POST',
+    success: function(data){
+      if (!data.error) {
+        window.location.replace('player?albumId=' + data.albumId + '&googleVisionGuess=' + data.googleVisionGuess);
+      } else {
+        window.location.replace('error');
+      }
+    }
   });
+}
+
+// This is code to make the drag and drop work
+// Which I got from here:
+// https://css-tricks.com/drag-and-drop-file-uploading/
+// and is slightly modified.
+
+var isAdvancedUpload = function() {
+  var div = document.createElement('div');
+  return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+}();
+
+var $form = $('#cover-form');
+
+if (isAdvancedUpload) {
+  $form.addClass('has-advanced-upload');
+  $('.box__button').hide();
+  $('.box__file').hide();
+}
+
+if (isAdvancedUpload) {
+
+  var droppedFiles = false;
+
+  $form.on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  })
+  .on('dragover dragenter', function() {
+    $form.addClass('is-dragover');
+  })
+  .on('dragleave dragend drop', function() {
+    $form.removeClass('is-dragover');
+  })
+  .on('drop', function(e) {
+    droppedFiles = e.originalEvent.dataTransfer.files;
+    console.log("DROP!");
+    if (!droppedFiles[0]) {
+      alert("Please drop an image file, not an image");
+    } else {
+      submitCoverForm(droppedFiles[0]);
+    }
+  });
+}

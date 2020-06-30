@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Record Player</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link id="favicon" rel="icon" href="https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fradio_1f4fb.png?1524440335079" type="image/x-icon">
+    
+    <!-- Social -->
+    <meta property="og:title" content="Record Player"/>
+    <meta property="og:description" content="A computer vision enabled record player with Spotify and Google Vision by Patrick Weaver" />
+    <meta property="og:image" content="https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fsocial-2-1.png?v=1588347828420" />
+    
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@patrickweave_r" />
+    <meta name="twitter:creator" content="@patrickweave_r" />
+    <meta name="twitter:title" content="Record Player" />
+    <meta name="twitter:description" content="A computer vision enabled record player with Spotify and Google Vision by Patrick Weaver" />
+    <meta name="twitter:image" content="https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fsocial-2-1.png?v=1588347828420" />
+  </head>
+  <body>
+    <div class="card" id="site-title">
+      <h1>
+        <a href="/">📻 Record Player 📻</a>
+      </h1>
+    </div>
+    
+    {{{body}}}
+    
+    {{#unless loggedOut}}
+      <br>
+      <div class="card">
+        <a href="/logout">Logout of Spotify</a>
+      </div>
+    {{/unless}}
+    <p class="card">
+      Made by <a href="https://twitter.com/patrickweave_r">Patrick Weaver</a>
+    </p>
+    <div class="glitchButton" style="position:fixed;top:20px;right:20px;"></div>
+    
+    <!-- Analytics -->
+    <img src="{{analyticsUrl}}" alt="" style="vertical-align: bottom; height: 0;" aria-hidden="true">
+    <script src="https://button.glitch.me/button.js"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+    <script src="script.js"></script> 
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-9178162-7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-9178162-7');
+    </script>
+    
+  </body>
+</html>

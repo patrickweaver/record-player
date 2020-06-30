@@ -1,0 +1,29 @@
+
+<form class="box" id="cover-form" action="/player" method="post" enctype="multipart/form-data">
+  <h2>
+     Take a picture of a record cover
+  </h2>
+  <div class="box__input">
+    <input class="box__file" type="file" name="file" id="album-cover-image" onchange="submitCoverFormOnChange()"/>
+    <label id="camera-label" for="album-cover-image">
+      <img id="camera-image" src="https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fcamera-with-flash_1f4f8.png?1525140907300">
+      <span id="camera-label-text">
+        <strong>Click to select or take a picture</strong><span class="box__dragndrop"> or drag one here</span>.
+      </span>
+    </label>
+    <button class="box__button" type="submit">Upload</button>
+  </div>
+  <div class="box__uploading">Uploading&hellip;</div>
+  <div class="box__success">Done!</div>
+  <div class="box__error">Error! <span></span>.</div>
+</form>
+
+{{> explanation}}
+
+<div id="spinner">
+  <img id="spotify-logo" class="logo" src="https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fspotify.png?1525038908160">
+  <img id="google-cloud-logo" class="logo" src="https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fgoogle-cloud.png?1525038908787">
+</div>
+
+  
+

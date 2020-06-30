@@ -1,30 +1,8 @@
-# hello-express
+# Record Player
 
-A server that serves a webpage, its resources, and some data
+This is a [Rube Goldberg Machine](https://en.wikipedia.org/wiki/Rube_Goldberg_machine) of the [Google Cloud Vision API](https://cloud.google.com/vision/) and the [Spotify API](https://beta.developer.spotify.com/documentation/web-api/). After logging into Spotify, upload an image. The image will be sent to the Google Vision API, which will guess what it is. The app will then search Spotify using Google's guess, and give you the first result to play.
 
+You will need the following to make your own:
 
-## Your Project
-
-On the front-end,
-
-- Edit `views/index.html` to change the content of the webpage
-- `public/client.js` is the javacript that runs when you load the webpage
-- `public/style.css` is the styles for `views/index.html`
-- Drag in `assets`, like images or music, to add them to your project
-
-On the back-end,
-
-- your app starts at `server.js`
-- add frameworks and packages in `package.json`
-- safely store app secrets in `.env` (nobody can see this but you and people you invite)
-
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy.
-
-
-## Made by [Glitch](https://glitch.com/)
-
-**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
-
-Find out more [about Glitch](https://glitch.com/about).
-
-( ᵔ ᴥ ᵔ )
+- [Google Cloud API Key](https://cloud.google.com/docs/authentication/api-keys) (this is set as GCP_API_KEY ENV variable)
+- Create a [Spotify App](https://beta.developer.spotify.com/dashboard/applications) (SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET ENV variables)
