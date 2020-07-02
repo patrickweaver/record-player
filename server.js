@@ -50,7 +50,7 @@ app.get('/auth-callback', (req, res) => {
     })
     .catch(err => handleError(res, err));
   } else {
-   handleError(res, "Wrong spotify auth code");     
+    handleError(res, "Wrong spotify auth code");     
   }
 });
 
@@ -106,10 +106,13 @@ app.post('/player', upload.single('file'), async function(req, res) {
   if (imagePath) {
     try {
       apiResponse = await apiChain(imagePath, req, res);
+      if (apiResponse.error) {
+        throw "No albums found."
+      }
     } catch(e) {
       apiResponse = {
         error: true,
-        errorMessage: "API requests failed."
+        errorMessage: "API requests failed or no albums found."
       }
     }
   }

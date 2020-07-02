@@ -4,7 +4,7 @@
   "description": "A computer vision enabled record player",
   "main": "server.js",
   "scripts": {
-    "start": "rm -r ./public/images; mkdir ./public/images && node server.js"
+    "start": "rm -r ./public/images; mkdir ./public/images && node -r dotenv/config server.js"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
