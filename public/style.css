@@ -1,0 +1,153 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 125%;
+  line-height: 125%;
+  font-family: sans-serif;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  background: url(https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fmusic-pattern.png?1525139512471);
+  background-size: 200px;
+  padding-bottom: 2em;
+}
+
+a {
+  color: #333;
+}
+
+button, input, label {
+  font-size: 100%;
+  line-height: 100%;
+  display: block;
+  margin: 1.5em 0;
+}
+
+.card {
+  background-color: #f8f8f8;
+  border-radius: 3px;
+  padding: 1em;
+  margin: 1em 10px 0;
+  display: inline-block;
+  line-height: 130%;
+  font-size: 110%;
+}
+
+#site-title h1 {
+  margin: 0;
+  line-height: 110%;
+}
+
+#site-title a {
+  text-decoration: none;
+  color: black;
+}
+
+#explanation {
+  text-align: justify;
+}
+
+#spotify-login-button {
+  padding: 1.5em 1em;
+}
+
+#demo-video {
+  margin: 1em 0 0;
+  max-width: 300px;
+}
+
+#camera-label {
+  cursor: pointer;
+}
+
+#camera-image {
+  width: 50px;
+}
+
+#camera-label-text {
+  width: 100%;
+  display: block;
+}
+
+#cover-form {
+  margin-top: 1em;
+  padding: 1em;
+}
+
+.box__dragndrop,
+.box__uploading,
+.box__success,
+.box__error {
+  display: none;
+}
+
+#cover-form.has-advanced-upload {
+  background-color: #f8f8f8;
+  border-radius: 5px;
+  outline: 5px dotted black;
+  outline-offset: -10px;
+}
+
+#cover-form.has-advanced-upload .box__dragndrop {
+  display: inline;
+}
+
+#cover-form.is-dragover {
+  background-color: #e9d1f9;
+}
+
+#spotify-auth-button {
+  background-color: #1db954;
+  color: white;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 7px;
+}
+
+#spinner{
+  display: none;
+}
+
+#spinner > .logo {
+  width: 150px;
+  position: absolute;
+  left: Calc(50% - 75px);
+  top: 200px;
+  display: block;
+}
+
+#spotify-logo {
+  animation: spotifyOrbit 4s linear infinite;
+}
+
+#google-cloud-logo {
+  animation: googleCloudOrbit 4s linear infinite;
+}
+
+@keyframes spotifyOrbit {
+    from { transform: rotate(0deg) translateX(-150px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(-150px) rotate(-360deg); }
+}
+
+@keyframes googleCloudOrbit {
+    from { transform: rotate(-360deg) translateX(150px) rotate(360deg); }
+    to   { transform: rotate(0deg) translateX(150px) rotate(0deg); }
+}
+
+#gv-card p {
+  margin: 0;
+}
+
+#spotify-embed {
+  margin-top: 1em;
+  padding: .5em;
+  border-radius: 3px;
+  background-color: #f8f8f8;
+  display: inline-block;
+}
+
+
+/* Most of the emojis in the background from Emoji one */
