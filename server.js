@@ -16,7 +16,7 @@ const url = require('url');
 const fs = require('fs');
 const uuidv4 = require('uuid/v4');
 
-const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
+const projectUrl = process.env.PROJECT_URL;
 const apiChain = require('./apiChain');
 const spotify = require('./spotify');
 
@@ -31,6 +31,7 @@ app.get('/auth', (req, res) => {
   res.cookie('spotifyStateString', stateRandString);
   let query = spotify.authQueryString(stateRandString);
   res.render('auth', {
+    projectUrl: projectUrl,
     authUrl: "https://accounts.spotify.com/authorize?" + querystring.stringify(query),
     loggedOut: true,
     analyticsUrl: process.env.ANALYTICS_URL
@@ -84,6 +85,7 @@ app.use(function(req, res, next) {
 // Camera is default view, unless not logged in
 app.get('/', (req, res) => {
   res.render('camera', {
+    projectUrl: projectUrl,
     analyticsUrl: process.env.ANALYTICS_URL
   });
 });
@@ -126,6 +128,7 @@ app.post('/player', upload.single('file'), async function(req, res) {
       });
     } else {
       res.render('player', {
+        projectUrl: projectUrl,
         googleVisionGuess: apiResponse.gvBestGuess,
         embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1],
         analyticsUrl: process.env.ANALYTICS_URL
@@ -155,6 +158,7 @@ app.post('/player', upload.single('file'), async function(req, res) {
 app.get('/player', function(req,res) {
   if (req.query.albumId && req.query.googleVisionGuess) {
     res.render('player', {
+      projectUrl: projectUrl,
       googleVisionGuess: req.query.googleVisionGuess,
       embed: spotify.embed[0] + req.query.albumId + spotify.embed[1],
       analyticsUrl: process.env.ANALYTICS_URL
@@ -173,6 +177,7 @@ function handleError(res, err) {
 
 app.get('/error', function(req, res) {
   res.render('error', {
+    projectUrl: projectUrl,
     analyticsUrl: process.env.ANALYTICS_URL
   });
 });
