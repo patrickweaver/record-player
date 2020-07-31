@@ -9,7 +9,7 @@ hbs.registerPartials(__dirname + '/views/partials/');
 
 
 var multer  = require('multer');
-var upload = multer({ dest: __dirname + '/public/images/' });
+var upload = multer({ dest: __dirname + '/public/uploaded-images/' });
 var rp = require('request-promise');
 const querystring = require('querystring');
 const url = require('url');
@@ -95,7 +95,7 @@ app.post('/player', upload.single('file'), async function(req, res) {
   var apiResponse;
   var imagePath = false;
   if (req.file && req.file.filename) {
-    imagePath = '/images/' + req.file.filename;
+    imagePath = '/uploaded-images/' + req.file.filename;
   } else {
     apiResponse = {
       error: true,

@@ -60,7 +60,7 @@ typings/
 # next.js build output
 .next
 
-public/images/*
-!public/images/images.txt
+public/uploaded-images/*
+!public/uploaded-images/empty.txt
 
 .DS_Store
