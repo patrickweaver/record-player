@@ -19,7 +19,7 @@ You will need the following to make your own:
 4. Add your Google Cloud API Key as GCP_API_KEY in a .env file.
 
 ![](https://record-player.glitch.me/docs/google-cloud-api-key-restrictions.png)
-[https://record-player.glitch.me/docs/google-cloud-api-key-restrictions.png](View Image)
+[View Image](https://record-player.glitch.me/docs/google-cloud-api-key-restrictions.png)
 
 ### Spotify:
 
@@ -30,4 +30,4 @@ You will need the following to make your own:
   - Redirect URIs: This is required to make the Spotify login work. It should be the protocol your site is hosted with + the root url of your site + "/auth-callback". For example: "https://record-player.glitch.me/auth-callback". You can add more than one so you can run locally or at multiple sites. See image below:
 
 ![](https://record-player.glitch.me/docs/spotify-app-settings-example.png)
-[https://record-player.glitch.me/docs/spotify-app-settings-example.png](View Image)
+[View Image](https://record-player.glitch.me/docs/spotify-app-settings-example.png)

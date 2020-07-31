@@ -143,9 +143,9 @@ app.post('/player', upload.single('file'), async function(req, res) {
   }
   if (imagePath) {
     try {
-      fs.unlinkSync('/app/public' + imagePath);
+      fs.unlinkSync('./public' + imagePath);
     } catch (err) {
-      console.log('error deleting ' + imagePath + ': ' + err);
+      console.log('error deleting ' + './app/public' + imagePath + ': ' + err);
     }
   }
 });
