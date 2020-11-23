@@ -14,9 +14,12 @@ You will need the following to make your own:
 
 1. Register a Google Cloud Platform account.
 2. Create a new project.
-3. Create Credentials for your project.
+3. Create Credentials for your project from the dashboard of Google Cloud Platform.
+  - You want API Key credentials, not `OAuth 2.0 Client IDs` or `Service Accounts` credentails. If you only see those two you are not in the right place.
   - It is a good idea to restrict your credentials access to only the Cloud Vision API.
 4. Add your Google Cloud API Key as GCP_API_KEY in a .env file.
+5. You may need to enable the Google Vision API in GCP.
+6. You will need to enable billing for the GCP project for the vision API to work.
 
 ![](https://record-player.glitch.me/docs/google-cloud-api-key-restrictions.png)
 [View Image](https://record-player.glitch.me/docs/google-cloud-api-key-restrictions.png)
