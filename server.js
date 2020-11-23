@@ -9,14 +9,15 @@ hbs.registerPartials(__dirname + '/views/partials/');
 
 
 var multer  = require('multer');
-var upload = multer({ dest: __dirname + '/public/images/' });
+var upload = multer({ dest: __dirname + '/public/uploaded-images/' });
 var rp = require('request-promise');
 const querystring = require('querystring');
 const url = require('url');
 const fs = require('fs');
 const uuidv4 = require('uuid/v4');
 
-const projectUrl = 'https://' + process.env.PROJECT_DOMAIN + '.glitch.me';
+const projectUrl = process.env.PROJECT_URL;
+const NOTE = process.env.NOTE
 const apiChain = require('./apiChain');
 const spotify = require('./spotify');
 
@@ -31,6 +32,8 @@ app.get('/auth', (req, res) => {
   res.cookie('spotifyStateString', stateRandString);
   let query = spotify.authQueryString(stateRandString);
   res.render('auth', {
+    projectUrl: projectUrl,
+    note: NOTE,
     authUrl: "https://accounts.spotify.com/authorize?" + querystring.stringify(query),
     loggedOut: true,
     analyticsUrl: process.env.ANALYTICS_URL
@@ -84,6 +87,8 @@ app.use(function(req, res, next) {
 // Camera is default view, unless not logged in
 app.get('/', (req, res) => {
   res.render('camera', {
+    projectUrl: projectUrl,
+    note: NOTE,
     analyticsUrl: process.env.ANALYTICS_URL
   });
 });
@@ -95,7 +100,7 @@ app.post('/player', upload.single('file'), async function(req, res) {
   var apiResponse;
   var imagePath = false;
   if (req.file && req.file.filename) {
-    imagePath = '/images/' + req.file.filename;
+    imagePath = '/uploaded-images/' + req.file.filename;
   } else {
     apiResponse = {
       error: true,
@@ -126,6 +131,8 @@ app.post('/player', upload.single('file'), async function(req, res) {
       });
     } else {
       res.render('player', {
+        projectUrl: projectUrl,
+        note: NOTE,
         googleVisionGuess: apiResponse.gvBestGuess,
         embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1],
         analyticsUrl: process.env.ANALYTICS_URL
@@ -155,6 +162,8 @@ app.post('/player', upload.single('file'), async function(req, res) {
 app.get('/player', function(req,res) {
   if (req.query.albumId && req.query.googleVisionGuess) {
     res.render('player', {
+      projectUrl: projectUrl,
+      note: NOTE,
       googleVisionGuess: req.query.googleVisionGuess,
       embed: spotify.embed[0] + req.query.albumId + spotify.embed[1],
       analyticsUrl: process.env.ANALYTICS_URL
@@ -173,6 +182,8 @@ function handleError(res, err) {
 
 app.get('/error', function(req, res) {
   res.render('error', {
+    projectUrl: projectUrl,
+    note: NOTE,
     analyticsUrl: process.env.ANALYTICS_URL
   });
 });

@@ -4,7 +4,7 @@
   "description": "A computer vision enabled record player",
   "main": "server.js",
   "scripts": {
-    "start": "rm -r ./public/images; mkdir ./public/images && touch ./public/images/empty.txt && node -r dotenv/config server.js"
+    "start": "rm -r ./public/uploaded-images; mkdir ./public/uploaded-images && touch ./public/uploaded-images/empty.txt && node -r dotenv/config server.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -18,7 +18,7 @@
     "uuid": "^3.2.1"
   },
   "engines": {
-    "node": "8.x"
+    "node": "12.x"
   },
   "repository": {
     "url": "https://glitch.com/edit/#!/record-player"

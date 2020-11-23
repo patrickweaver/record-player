@@ -10,7 +10,7 @@ body {
   max-width: 600px;
   margin: 0 auto;
   text-align: center;
-  background: url(https://cdn.glitch.com/94c70e5c-2d94-482a-9cff-7c0913fe4eb5%2Fmusic-pattern.png?1525139512471);
+  background: url(/images/music-background.png);
   background-size: 200px;
   padding-bottom: 2em;
 }
