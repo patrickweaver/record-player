@@ -135,7 +135,7 @@ app.post("/player", upload.single("file"), async function (req, res) {
   } else {
     res.render("player", {
       googleVisionGuess: apiResponse.gvBestGuess,
-      embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1],
+      embed: spotify.getEmbed(apiResponse.albumId),
       ...defaultLocals,
     });
   }
@@ -156,7 +156,7 @@ app.get("/player", function (req, res) {
   if (!albumId || !googleVisionGuess) res.redirect("/");
   res.render("player", {
     googleVisionGuess,
-    embed: spotify.embed[0] + req.query.albumId + spotify.embed[1],
+    embed: spotify.getEmbed(albumId),
     ...defaultLocals,
   });
 });

@@ -1,47 +1,46 @@
 const qs = require("qs");
 
 const projectUrl = process.env.PROJECT_URL;
-
 const spotifyApiUrl = "https://api.spotify.com/v1/";
-const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
-const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+const client_id = process.env.SPOTIFY_CLIENT_ID;
+const client_secret = process.env.SPOTIFY_CLIENT_SECRET;
 const redirectPath = "/auth-callback";
-const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
+const redirect_uri = projectUrl + redirectPath;
 
-function queryOptions(spotifyToken, safeGuess) {
+function getToken(id, secret) {
+  return Buffer.from(`${id}:${secret}`, "utf-8").toString("base64");
+}
+
+function queryOptions(token, safeGuess) {
   return {
-    url: spotifyApiUrl + "search?q=" + safeGuess + "&type=album",
+    url: `${spotifyApiUrl}search?q=${safeGuess}&type=album`,
     config: {
-      headers: { Authorization: `Bearer ${spotifyToken}` },
+      headers: { Authorization: `Bearer ${token}` },
     },
   };
 }
 
 function authQueryString(state) {
   return {
-    client_id: SPOTIFY_CLIENT_ID,
+    client_id: client_id,
     response_type: "code",
-    redirect_uri: SPOTIFY_REDIRECT_URI,
-    state: state,
+    redirect_uri,
+    state,
     show_dialog: false,
   };
 }
 
 function authOptions(code) {
-  const spotifyToken = Buffer.from(
-    `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`,
-    "utf-8"
-  ).toString("base64");
   return {
     url: "https://accounts.spotify.com/api/token",
     data: qs.stringify({
       grant_type: "client_credentials",
-      redirect_uri: SPOTIFY_REDIRECT_URI,
+      redirect_uri,
       code,
     }),
     config: {
       headers: {
-        Authorization: `Basic ${spotifyToken}`,
+        Authorization: `Basic ${getToken(client_id, client_secret)}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
     },
@@ -60,37 +59,32 @@ function setCookies(res, data) {
   }
 }
 
-function refreshOptions(refreshToken) {
-  const spotifyToken = Buffer.from(
-    `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`,
-    "utf-8"
-  ).toString("base64");
+function refreshOptions(refresh_token) {
   return {
     url: "https://accounts.spotify.com/api/token",
     data: qs.stringify({
       grant_type: "refresh_token",
-      redirect_uri: SPOTIFY_REDIRECT_URI,
-      refresh_token: refreshToken,
+      redirect_uri,
+      refresh_token,
     }),
     config: {
       headers: {
-        Authorization: `Basic ${spotifyToken}`,
+        Authorization: `Basic ${getToken(client_id, client_secret)}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
     },
   };
 }
 
-const embed = [
-  '<iframe id="spotify-embed-iframe" src="https://open.spotify.com/embed?uri=spotify:album:',
-  '" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>',
-];
+function getEmbed(albumId) {
+  return `<iframe id="spotify-embed-iframe" src="https://open.spotify.com/embed?uri=spotify:album:${albumId}" width="300" height="480" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+}
 
 module.exports = {
-  queryOptions: queryOptions,
-  authQueryString: authQueryString,
-  authOptions: authOptions,
-  setCookies: setCookies,
-  refreshOptions: refreshOptions,
-  embed: embed,
+  queryOptions,
+  authQueryString,
+  authOptions,
+  setCookies,
+  refreshOptions,
+  getEmbed,
 };
