@@ -10,6 +10,7 @@ hbs.registerPartials(__dirname + "/views/partials/");
 var multer = require("multer");
 var upload = multer({ dest: __dirname + "/public/uploaded-images/" });
 var rp = require("request-promise");
+const axios = require("axios");
 const querystring = require("querystring");
 const url = require("url");
 const fs = require("fs");
@@ -39,17 +40,17 @@ app.get("/auth", (req, res) => {
 });
 
 // Spotify redirects to this url, it sets cookies, then redirects
-app.get("/auth-callback", (req, res) => {
+app.get("/auth-callback", async (req, res) => {
   if (req.query.state === req.cookies.spotifyStateString && !req.query.error) {
     var code = req.query.code;
-
-    const spotifyAuthOptions = spotify.authOptions(code);
-    rp(spotifyAuthOptions)
-      .then((data) => {
-        spotify.setCookies(res, data);
-        res.redirect("/");
-      })
-      .catch((err) => handleError(res, err));
+    try {
+      const { url, data, config } = spotify.authOptions(code);
+      const response = await axios.post(url, data, config);
+      spotify.setCookies(res, response.data);
+      res.redirect("/");
+    } catch (err) {
+      handleError(res, err);
+    }
   } else {
     handleError(res, "Wrong spotify auth code");
   }

@@ -8,7 +8,7 @@ function b64req(file) {
   // read binary data
   let image = fs.readFileSync(file);
   // convert binary data to base64 encoded string
-  return new Buffer(image).toString("base64");
+  return Buffer.from(image).toString("base64");
 }
 
 async function getGcpOptions(imageUrl) {
@@ -21,24 +21,15 @@ async function getGcpOptions(imageUrl) {
   }
 
   return {
-    method: "POST",
-    uri: gcpApiUrl + "key=" + GCP_API_KEY,
-    body: {
+    url: gcpApiUrl + "key=" + GCP_API_KEY,
+    data: {
       requests: [
         {
-          image: {
-            content: imageData,
-          },
-          features: [
-            {
-              type: "WEB_DETECTION",
-              maxResults: 1,
-            },
-          ],
+          image: { content: imageData },
+          features: [{ type: "WEB_DETECTION", maxResults: 1 }],
         },
       ],
     },
-    json: true, // Automatically stringifies the body to JSON
   };
 }
 

@@ -1,4 +1,4 @@
-var rp = require("request-promise");
+const qs = require("qs");
 
 const projectUrl = process.env.PROJECT_URL;
 
@@ -10,11 +10,9 @@ const SPOTIFY_REDIRECT_URI = projectUrl + redirectPath;
 
 function queryOptions(spotifyToken, safeGuess) {
   return {
-    method: "GET",
-    uri: spotifyApiUrl + "search?q=" + safeGuess + "&type=album",
-    json: true,
-    auth: {
-      bearer: spotifyToken,
+    url: spotifyApiUrl + "search?q=" + safeGuess + "&type=album",
+    config: {
+      headers: { Authorization: `Bearer ${spotifyToken}` },
     },
   };
 }
@@ -30,17 +28,23 @@ function authQueryString(state) {
 }
 
 function authOptions(code) {
+  const spotifyToken = Buffer.from(
+    `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`,
+    "utf-8"
+  ).toString("base64");
   return {
-    method: "POST",
-    uri: "https://accounts.spotify.com/api/token",
-    form: {
-      grant_type: "authorization_code",
-      code: code,
+    url: "https://accounts.spotify.com/api/token",
+    data: qs.stringify({
+      grant_type: "client_credentials",
       redirect_uri: SPOTIFY_REDIRECT_URI,
-      client_id: SPOTIFY_CLIENT_ID,
-      client_secret: SPOTIFY_CLIENT_SECRET,
+      code,
+    }),
+    config: {
+      headers: {
+        Authorization: `Basic ${spotifyToken}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
     },
-    json: true,
   };
 }
 
