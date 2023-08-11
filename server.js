@@ -1,62 +1,59 @@
-var express = require("express");
-var cookieParser = require("cookie-parser");
-var app = express();
-app.use(cookieParser());
+const express = require("express");
+const cookieParser = require("cookie-parser");
 const hbs = require("hbs");
-app.set("view engine", "hbs");
-app.set("views", "views");
-hbs.registerPartials(__dirname + "/views/partials/");
-
-var multer = require("multer");
-var upload = multer({ dest: __dirname + "/public/uploaded-images/" });
+const multer = require("multer");
 const axios = require("axios");
-const querystring = require("querystring");
-const url = require("url");
+const qs = require("qs");
 const fs = require("fs");
 
-const projectUrl = process.env.PROJECT_URL;
-const NOTE = process.env.NOTE;
 const apiChain = require("./apiChain");
 const spotify = require("./spotify");
 
-/* Routes */
+const projectUrl = process.env.PROJECT_URL;
+const note = process.env.NOTE;
+const analyticsUrl = process.env.ANALYTICS_URL;
 
+const app = express();
+app.use(cookieParser());
 app.use(express.static("public"));
+app.set("view engine", "hbs");
+app.set("views", "views");
+hbs.registerPartials(__dirname + "/views/partials/");
+const upload = multer({ dest: __dirname + "/public/uploaded-images/" });
 
 // Explains the app and has Spotify login link
-app.get("/auth", (req, res) => {
-  let stateRandString = process.env.SPOTIFY_STATE_STRING;
-  res.cookie("spotifyStateString", stateRandString);
-  let query = spotify.authQueryString(stateRandString);
+app.get("/auth", function (_req, res) {
+  const stateString = process.env.SPOTIFY_STATE_STRING;
+  res.cookie("spotifyStateString", stateString);
+  const query = spotify.authQueryString(stateString);
+  const authUrl =
+    "https://accounts.spotify.com/authorize?" + qs.stringify(query);
   res.render("auth", {
-    projectUrl: projectUrl,
-    note: NOTE,
-    authUrl:
-      "https://accounts.spotify.com/authorize?" + querystring.stringify(query),
+    projectUrl,
+    note,
+    authUrl,
     loggedOut: true,
-    analyticsUrl: process.env.ANALYTICS_URL,
+    analyticsUrl,
   });
 });
 
 // Spotify redirects to this url, it sets cookies, then redirects
-app.get("/auth-callback", async (req, res) => {
-  if (req.query.state === req.cookies.spotifyStateString && !req.query.error) {
-    var code = req.query.code;
-    try {
-      const { url, data, config } = spotify.authOptions(code);
-      const response = await axios.post(url, data, config);
-      spotify.setCookies(res, response.data);
-      res.redirect("/");
-    } catch (err) {
-      handleError(res, err);
-    }
-  } else {
+app.get("/auth-callback", async function (req, res) {
+  const { error, state, code } = req.query;
+  if (error || !state || state !== req.cookies.spotifyStateString)
     handleError(res, "Wrong spotify auth code");
+  try {
+    const { url, data, config } = spotify.authOptions(code);
+    const response = await axios.post(url, data, config);
+    spotify.setCookies(res, response.data);
+    res.redirect("/");
+  } catch (err) {
+    handleError(res, err);
   }
 });
 
 // Logs out of Spotify, then redirects
-app.get("/logout", (req, res) => {
+app.get("/logout", (_req, res) => {
   res.clearCookie("spotifyAccessToken");
   res.clearCookie("spotifyRefreshToken");
   res.redirect("/");
@@ -66,39 +63,36 @@ app.get("/logout", (req, res) => {
 app.use(async function (req, res, next) {
   if (req.cookies.spotifyAccessToken) {
     next();
-  } else {
-    if (req.cookies.spotifyRefreshToken) {
-      try {
-        const { url, data, config } = spotify.refreshOptions(
-          req.cookies.spotifyRefreshToken
-        );
-        const response = await axios.post(url, data, config);
-        spotify.setCookies(res, response.data);
-        next();
-      } catch (err) {
-        handleError(res, err);
-      }
-    } else {
-      res.redirect("/auth");
-    }
+    return;
+  }
+  if (!req.cookies.spotifyRefreshToken) return res.redirect("/auth");
+  try {
+    const { url, data, config } = spotify.refreshOptions(
+      req.cookies.spotifyRefreshToken
+    );
+    const response = await axios.post(url, data, config);
+    spotify.setCookies(res, response.data);
+    next();
+  } catch (err) {
+    handleError(res, err);
   }
 });
 
 // Camera is default view, unless not logged in
-app.get("/", (req, res) => {
+app.get("/", function (_req, res) {
   res.render("camera", {
-    projectUrl: projectUrl,
-    note: NOTE,
-    analyticsUrl: process.env.ANALYTICS_URL,
+    projectUrl,
+    note,
+    analyticsUrl,
   });
 });
 
 // This route works for both the async request from the frontend
-// or as a form submittion if the fancy uploader doesn't work (no js).
+// or as a form submission if the fancy uploader doesn't work (no js).
 // At the end the image is deleted from the server
 app.post("/player", upload.single("file"), async function (req, res) {
-  var apiResponse;
-  var imagePath = false;
+  let apiResponse;
+  let imagePath = false;
   if (req.file && req.file.filename) {
     imagePath = "/uploaded-images/" + req.file.filename;
   } else {
@@ -122,23 +116,7 @@ app.post("/player", upload.single("file"), async function (req, res) {
     }
   }
 
-  if (!apiResponse.error) {
-    if (req.body.async) {
-      res.json({
-        error: false,
-        googleVisionGuess: apiResponse.gvBestGuess,
-        albumId: apiResponse.albumId,
-      });
-    } else {
-      res.render("player", {
-        projectUrl: projectUrl,
-        note: NOTE,
-        googleVisionGuess: apiResponse.gvBestGuess,
-        embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1],
-        analyticsUrl: process.env.ANALYTICS_URL,
-      });
-    }
-  } else {
+  if (apiResponse.error) {
     if (req.body.async) {
       res.json({
         error: true,
@@ -148,6 +126,22 @@ app.post("/player", upload.single("file"), async function (req, res) {
       handleError(res, "Error: " + apiResponse.errorMessage);
     }
   }
+  if (req.body.async) {
+    res.json({
+      error: false,
+      googleVisionGuess: apiResponse.gvBestGuess,
+      albumId: apiResponse.albumId,
+    });
+  } else {
+    res.render("player", {
+      projectUrl: projectUrl,
+      note,
+      googleVisionGuess: apiResponse.gvBestGuess,
+      embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1],
+      analyticsUrl,
+    });
+  }
+  // Delete image
   if (imagePath) {
     try {
       fs.unlinkSync("./public" + imagePath);
@@ -160,31 +154,30 @@ app.post("/player", upload.single("file"), async function (req, res) {
 // Once the async apiChain request returns, frontend redirects to player
 // with Spotify album ID as query string parameter
 app.get("/player", function (req, res) {
-  if (req.query.albumId && req.query.googleVisionGuess) {
-    res.render("player", {
-      projectUrl: projectUrl,
-      note: NOTE,
-      googleVisionGuess: req.query.googleVisionGuess,
-      embed: spotify.embed[0] + req.query.albumId + spotify.embed[1],
-      analyticsUrl: process.env.ANALYTICS_URL,
-    });
-  } else {
-    res.redirect("/");
-  }
+  const { albumId, googleVisionGuess } = req.query;
+  if (!albumId || !googleVisionGuess) res.redirect("/");
+  res.render("player", {
+    projectUrl,
+    note,
+    googleVisionGuess,
+    embed: spotify.embed[0] + req.query.albumId + spotify.embed[1],
+    analyticsUrl,
+  });
 });
 
 // General error handling
 function handleError(res, err) {
-  console.log("\nError");
+  console.log("\nError:");
   console.log(JSON.stringify(err));
+  console.log({ err });
   res.redirect("/error");
 }
 
 app.get("/error", function (req, res) {
   res.render("error", {
-    projectUrl: projectUrl,
-    note: NOTE,
-    analyticsUrl: process.env.ANALYTICS_URL,
+    projectUrl,
+    note,
+    analyticsUrl,
   });
 });
 
