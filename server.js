@@ -13,6 +13,12 @@ const projectUrl = process.env.PROJECT_URL;
 const note = process.env.NOTE;
 const analyticsUrl = process.env.ANALYTICS_URL;
 
+const defaultLocals = {
+  projectUrl,
+  note,
+  analyticsUrl,
+};
+
 const app = express();
 app.use(cookieParser());
 app.use(express.static("public"));
@@ -29,11 +35,9 @@ app.get("/auth", function (_req, res) {
   const authUrl =
     "https://accounts.spotify.com/authorize?" + qs.stringify(query);
   res.render("auth", {
-    projectUrl,
-    note,
     authUrl,
     loggedOut: true,
-    analyticsUrl,
+    ...defaultLocals,
   });
 });
 
@@ -80,11 +84,7 @@ app.use(async function (req, res, next) {
 
 // Camera is default view, unless not logged in
 app.get("/", function (_req, res) {
-  res.render("camera", {
-    projectUrl,
-    note,
-    analyticsUrl,
-  });
+  res.render("camera", defaultLocals);
 });
 
 // This route works for both the async request from the frontend
@@ -134,11 +134,9 @@ app.post("/player", upload.single("file"), async function (req, res) {
     });
   } else {
     res.render("player", {
-      projectUrl: projectUrl,
-      note,
       googleVisionGuess: apiResponse.gvBestGuess,
       embed: spotify.embed[0] + apiResponse.albumId + spotify.embed[1],
-      analyticsUrl,
+      ...defaultLocals,
     });
   }
   // Delete image
@@ -157,11 +155,9 @@ app.get("/player", function (req, res) {
   const { albumId, googleVisionGuess } = req.query;
   if (!albumId || !googleVisionGuess) res.redirect("/");
   res.render("player", {
-    projectUrl,
-    note,
     googleVisionGuess,
     embed: spotify.embed[0] + req.query.albumId + spotify.embed[1],
-    analyticsUrl,
+    ...defaultLocals,
   });
 });
 
@@ -173,14 +169,10 @@ function handleError(res, err) {
   res.redirect("/error");
 }
 
-app.get("/error", function (req, res) {
-  res.render("error", {
-    projectUrl,
-    note,
-    analyticsUrl,
-  });
+app.get("/error", function (_req, res) {
+  res.render("error", defaultLocals);
 });
 
-var listener = app.listen(process.env.PORT, function () {
+const listener = app.listen(process.env.PORT, function () {
   console.log("Your app is listening on port " + listener.address().port);
 });
