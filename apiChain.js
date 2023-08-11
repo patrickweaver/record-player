@@ -38,7 +38,7 @@ function checkGoogleVisionGuess(data) {
 
   let guessArray = guess.split(" ");
   let safeArray = [];
-  for (var i in guessArray) {
+  for (let i in guessArray) {
     let safe = true;
     if (censoredWords.censoredWords.indexOf(guessArray[i]) > -1) {
       safe = false;
@@ -63,7 +63,7 @@ async function askSpotifyApi(spotifyToken, data) {
   let albumId = false;
   let spotifyData = {};
   let splitSafeGuessArray = splitGuessAtHyphen(safeGuessArray);
-  for (var i = splitSafeGuessArray.length; i > 0; i--) {
+  for (let i = splitSafeGuessArray.length; i > 0; i--) {
     spotifyData = await spotifyApiRequest(
       spotifyToken,
       splitSafeGuessArray.slice(0, i)

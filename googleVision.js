@@ -1,7 +1,7 @@
+const fs = require("fs");
+
 const gcpApiUrl = "https://vision.googleapis.com/v1/images:annotate?";
 const GCP_API_KEY = process.env.GCP_API_KEY;
-
-const fs = require("fs");
 
 // function to encode file data to base64 encoded string
 function b64req(file) {
@@ -12,8 +12,9 @@ function b64req(file) {
 }
 
 async function getGcpOptions(imageUrl) {
+  let imageData;
   try {
-    var imageData = b64req(imageUrl);
+    imageData = b64req(imageUrl);
   } catch (error) {
     console.log("Error in getGcpOptions with imageUrl:", imageUrl);
     console.log(error);
@@ -21,7 +22,7 @@ async function getGcpOptions(imageUrl) {
   }
 
   return {
-    url: gcpApiUrl + "key=" + GCP_API_KEY,
+    url: `${gcpApiUrl}key=${GCP_API_KEY}`,
     data: {
       requests: [
         {
@@ -34,5 +35,5 @@ async function getGcpOptions(imageUrl) {
 }
 
 module.exports = {
-  getGcpOptions: getGcpOptions,
+  getGcpOptions,
 };

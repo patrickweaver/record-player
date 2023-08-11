@@ -1,7 +1,7 @@
 // This is called when the <input> file upload changes.
 function submitCoverFormOnChange() {
-  var input = document.getElementById("album-cover-image");
-  var file = input.files[0];
+  const input = document.getElementById("album-cover-image");
+  const file = input.files[0];
   submitCoverForm(file);
 }
 
@@ -12,7 +12,7 @@ function submitCoverForm(file) {
   document.getElementById("cover-form").style.display = "none";
   document.getElementById("spinner").style.display = "block";
 
-  var formData = new FormData();
+  const formData = new FormData();
   formData.append("file", file);
   formData.append("async", true);
 
@@ -43,8 +43,8 @@ function submitCoverForm(file) {
 // https://css-tricks.com/drag-and-drop-file-uploading/
 // and is slightly modified.
 
-var isAdvancedUpload = (function () {
-  var div = document.createElement("div");
+const isAdvancedUpload = (function () {
+  const div = document.createElement("div");
   return (
     ("draggable" in div || ("ondragstart" in div && "ondrop" in div)) &&
     "FormData" in window &&
@@ -52,7 +52,7 @@ var isAdvancedUpload = (function () {
   );
 })();
 
-var $form = $("#cover-form");
+const $form = $("#cover-form");
 
 if (isAdvancedUpload) {
   $form.addClass("has-advanced-upload");
@@ -61,7 +61,7 @@ if (isAdvancedUpload) {
 }
 
 if (isAdvancedUpload) {
-  var droppedFiles = false;
+  let droppedFiles = false;
 
   $form
     .on(
