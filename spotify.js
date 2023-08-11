@@ -61,16 +61,23 @@ function setCookies(res, data) {
 }
 
 function refreshOptions(refreshToken) {
+  const spotifyToken = Buffer.from(
+    `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`,
+    "utf-8"
+  ).toString("base64");
   return {
-    method: "post",
-    uri: "https://accounts.spotify.com/api/token",
-    form: {
+    url: "https://accounts.spotify.com/api/token",
+    data: qs.stringify({
       grant_type: "refresh_token",
+      redirect_uri: SPOTIFY_REDIRECT_URI,
       refresh_token: refreshToken,
-      client_id: SPOTIFY_CLIENT_ID,
-      client_secret: SPOTIFY_CLIENT_SECRET,
+    }),
+    config: {
+      headers: {
+        Authorization: `Basic ${spotifyToken}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
     },
-    json: true,
   };
 }
 

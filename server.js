@@ -9,7 +9,6 @@ hbs.registerPartials(__dirname + "/views/partials/");
 
 var multer = require("multer");
 var upload = multer({ dest: __dirname + "/public/uploaded-images/" });
-var rp = require("request-promise");
 const axios = require("axios");
 const querystring = require("querystring");
 const url = require("url");
@@ -64,20 +63,21 @@ app.get("/logout", (req, res) => {
 });
 
 // Checks for login cookie, if it doesn't find it redirects
-app.use(function (req, res, next) {
+app.use(async function (req, res, next) {
   if (req.cookies.spotifyAccessToken) {
     next();
   } else {
     if (req.cookies.spotifyRefreshToken) {
-      const spotifyRefreshOptions = spotify.refreshOptions(
-        req.cookies.spotifyRefreshToken
-      );
-      rp(spotifyRefreshOptions)
-        .then((data) => {
-          spotify.setCookies(res, data);
-          next();
-        })
-        .catch((err) => handleError(res, err));
+      try {
+        const { url, data, config } = spotify.refreshOptions(
+          req.cookies.spotifyRefreshToken
+        );
+        const response = await axios.post(url, data, config);
+        spotify.setCookies(res, response.data);
+        next();
+      } catch (err) {
+        handleError(res, err);
+      }
     } else {
       res.redirect("/auth");
     }
