@@ -82,7 +82,7 @@ app.use(async function (req, res, next) {
   }
 });
 
-// Camera is default view, unless not logged in
+// Camera is default view when logged in
 app.get("/", function (_req, res) {
   res.render("camera", defaultLocals);
 });
@@ -94,7 +94,7 @@ app.post("/player", upload.single("file"), async function (req, res) {
   let apiResponse;
   let imagePath = false;
   if (req.file && req.file.filename) {
-    imagePath = "/uploaded-images/" + req.file.filename;
+    imagePath = `uploaded-images/${req.file.filename}`;
   } else {
     apiResponse = {
       error: true,
@@ -104,7 +104,7 @@ app.post("/player", upload.single("file"), async function (req, res) {
 
   if (imagePath) {
     try {
-      apiResponse = await apiChain(imagePath, req, res);
+      apiResponse = await apiChain(imagePath, req);
       if (apiResponse.error) {
         throw "No albums found.";
       }
@@ -165,7 +165,6 @@ app.get("/player", function (req, res) {
 function handleError(res, err) {
   console.log("\nError:");
   console.log(JSON.stringify(err));
-  console.log({ err });
   res.redirect("/error");
 }
 

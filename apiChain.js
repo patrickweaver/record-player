@@ -8,7 +8,7 @@ const censoredWords = require("./censoredWords");
 async function askGoogleVision(ob, imagePath) {
   return new Promise(async function (resolve, reject) {
     let { url, data } = await googleVision.getGcpOptions(
-      "./public" + imagePath
+      `./public${imagePath}`
     );
     let response = await axios.post(url, data);
     const gvGuess = await response.data;
@@ -32,8 +32,7 @@ function checkGoogleVisionGuess(data) {
   data.gvBestGuess = guess;
 
   if (!guess) {
-    throw "No guess from google ¯_(ツ)_/¯ ";
-    return;
+    throw "No guess from google ¯\\_(ツ)_/¯ ";
   }
 
   let guessArray = guess.split(" ");
@@ -53,8 +52,7 @@ function checkGoogleVisionGuess(data) {
 
 // Before asking spotify remove anything in the Google Vision
 // guess before a hyphen (-) character. The Google Vision API was
-// was putting record label info in, which was confusing the
-// Spotify API.
+// was putting record label info in, which was confusing the Spotify API.
 // Then query spotify API using spotifyApiRequest.
 // It is a separate function because if the Spotify API returns 0
 // albums the app will ask it again with 1 fewer word.
@@ -118,7 +116,7 @@ function splitGuessAtHyphen(safeGuessArray) {
   return splitArray;
 }
 
-function apiChain(imagePath, req, res) {
+function apiChain(imagePath, req) {
   //console.log("Image Path: " + imagePath);
   let data = {};
 

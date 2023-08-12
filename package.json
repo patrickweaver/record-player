@@ -1,6 +1,6 @@
 {
   "name": "record-player",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A computer vision enabled record player",
   "main": "server.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "node": "20.x"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/record-player"
+    "url": "https://github.com/patrickweaver/record-player"
   },
-  "license": "MIT"
+  "license": "CC BY-NC 3.0 US"
 }
