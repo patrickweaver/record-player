@@ -15,8 +15,6 @@ const fullCensoredWords = censoredWords.reduce(
   []
 );
 
-console.log(fullCensoredWords);
-
 module.exports = {
   censoredWords: fullCensoredWords,
 };
