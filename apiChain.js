@@ -8,7 +8,7 @@ const censoredWords = require("./censoredWords");
 async function askGoogleVision(ob, imagePath) {
   return new Promise(async function (resolve, reject) {
     let { url, data } = await googleVision.getGcpOptions(
-      `./public${imagePath}`
+      `./public/${imagePath}`
     );
     let response = await axios.post(url, data);
     const gvGuess = await response.data;
