@@ -16,7 +16,7 @@
     "qs": "^6.11.2"
   },
   "engines": {
-    "node": "20.x"
+    "node": "16.x"
   },
   "repository": {
     "url": "https://github.com/patrickweaver/record-player"
