@@ -24,8 +24,8 @@ You will need the following to make your own version of the app:
 5. You may need to enable the Google Vision API in GCP.
 6. You will need to enable billing for the GCP project for the vision API to work.
 
-![A screenshot of the Google cloud interface](/docs/google-cloud-api-key-restrictions.png)
-[View Image](/docs/google-cloud-api-key-restrictions.png)
+![A screenshot of the Google cloud interface](https://github.com/patrickweaver/record-player/blob/master/public/docs/google-cloud-api-key-restrictions.png)
+[View Image](https://github.com/patrickweaver/record-player/blob/master/public/docs/google-cloud-api-key-restrictions.png)
 
 ### Spotify
 
@@ -36,5 +36,5 @@ You will need the following to make your own version of the app:
 - Website: The website where you will host the app (you can run the app at different websites or locally without updating this.)
 - Redirect URIs: This is required to make the Spotify login work. It should be the protocol your site is hosted with + the root url of your site + "/auth-callback". For example: "https://record-player.glitch.me/auth-callback". You can add more than one so you can run locally or at multiple sites. See image below:
 
-![A screenshot of the Spotify settings](/docs/spotify-app-settings-example.png)
-[View Image](/docs/spotify-app-settings-example.png)
+![A screenshot of the Spotify settings](https://github.com/patrickweaver/record-player/blob/master/public/docs/spotify-app-settings-example.png)
+[View Image](https://github.com/patrickweaver/record-player/blob/master/public/docs/spotify-app-settings-example.png)
