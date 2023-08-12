@@ -2,6 +2,8 @@ const fs = require("fs");
 
 const gcpApiUrl = "https://vision.googleapis.com/v1/images:annotate?";
 const GCP_API_KEY = process.env.GCP_API_KEY;
+// Setting this is optional
+const GCP_API_KEY_2 = process.env.GCP_API_KEY_2;
 
 // function to encode file data to base64 encoded string
 function b64req(file) {
@@ -21,8 +23,17 @@ async function getGcpOptions(imageUrl) {
     return;
   }
 
+  // This is a hack to split the free 1000 requests per month over two Google
+  // Cloud accounts
+  function randomizeKey() {
+    if (GCP_API_KEY_2 && Math.random() > 0.5) {
+      return GCP_API_KEY_2;
+    }
+    return GCP_API_KEY;
+  }
+
   return {
-    url: `${gcpApiUrl}key=${GCP_API_KEY}`,
+    url: `${gcpApiUrl}key=${randomizeKey()}`,
     data: {
       requests: [
         {
