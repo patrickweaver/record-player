@@ -1,5 +1,13 @@
 # Record Player
 
+## 2025 Update
+
+Record Player was designed and hosted on Glitch.com from its first day in 2018, until July 2025. Glitch.com closed web hosting in 2025, and I decided not to move the project to a new host. The old url record-player.glitch.me now redirects to [my portfolio](https://www.patrickweaver.net/portfolio/record-player).
+
+Thanks for using Record Player, if you have any questions, thoughts, or comments, feel free to email me, or contact me through one of the websites listed on the Links page of [my website](https://www.patrickweaver.net/links).
+
+---
+
 This is a [Rube Goldberg Machine](https://en.wikipedia.org/wiki/Rube_Goldberg_machine) of the [Google Cloud Vision API](https://cloud.google.com/vision/) and the [Spotify API](https://beta.developer.spotify.com/documentation/web-api/). After logging into Spotify, upload an image. The image will be sent to the Google Vision API, which will guess what it is. The app will then search Spotify using Google's guess, and give you the first result to play.
 
 There are a few environment variables you will have to set when running this locally or on a server.
