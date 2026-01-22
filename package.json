@@ -7,7 +7,7 @@
     "start": "rm -r ./public/uploaded-images; mkdir ./public/uploaded-images && touch ./public/uploaded-images/empty.txt && node -r dotenv/config server.js"
   },
   "dependencies": {
-    "axios": "^1.4.0",
+    "axios": "^1.6.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.3.1",
     "express": "^4.17.3",
